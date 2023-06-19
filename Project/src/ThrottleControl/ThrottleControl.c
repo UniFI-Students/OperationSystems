@@ -2,8 +2,8 @@
 #include <stdbool.h>
 #include <time.h>
 #include "ThrottleControl.h"
-#include "Logger.h"
-#include "Random.h"
+#include "../Logger/Logger.h"
+#include "../Random/Random.h"
 
 #define INCREMENT "INCREMENTO"
 #define THROTTLE_CONTROL_LOGFILE "throttle.logMessage"
