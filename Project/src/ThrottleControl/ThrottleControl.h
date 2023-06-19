@@ -9,5 +9,5 @@ enum ThrottleControlCommandType {
 
 struct ThrottleControlCommand {
     ThrottleControlCommandType type;
-    size_t quantity;
+    ssize_t quantity;
 };

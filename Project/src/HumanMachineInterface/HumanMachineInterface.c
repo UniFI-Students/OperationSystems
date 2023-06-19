@@ -11,7 +11,7 @@ void executeHmiReader();
 void executeHmiWriter();
 
 void sendCommandToEcu(HumanMachineInterfaceCommand command);
-void receiveMessageFromEcu(char **message);
+void receiveMessageFromEcu(char* message);
 
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
@@ -46,8 +46,8 @@ void executeHmiReader() {
 
 void executeHmiWriter() {
     while (1) {
-        char *message;
-        receiveMessageFromEcu(&message);
+        char message[32];
+        receiveMessageFromEcu(message);
         printf("%s\n", message);
     }
 }
@@ -57,7 +57,7 @@ void sendCommandToEcu(HumanMachineInterfaceCommand command) {
     //TODO: Implement sendCommandToEcu
 }
 
-void receiveMessageFromEcu(char **message) {
+void receiveMessageFromEcu(char* message) {
     //TODO: Implement receiveMessageFromEcu
 }
 

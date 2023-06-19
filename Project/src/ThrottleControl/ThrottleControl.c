@@ -4,6 +4,7 @@
 #include "ThrottleControl.h"
 #include "../Logger/Logger.h"
 #include "../Random/Random.h"
+#include "../DateProvider/DateProvider.h"
 
 #define INCREMENT "INCREMENTO"
 #define THROTTLE_CONTROL_LOGFILE "throttle.logMessage"
@@ -16,7 +17,7 @@ bool isThrottleFailed();
 
 void handleFailedThrottleCommand(ThrottleControlCommand command);
 
-void signalFailedThrottleCommandToEcu();
+void signalAboutFailedThrottleCommandToEcu();
 
 int main(){
     startRand(time(NULL));
@@ -50,14 +51,14 @@ void handleSucceedThrottleCommand(ThrottleControlCommand command) {
             break;
     }
 
-    sprintf(message, "%s %lu", commandType, command.quantity);
+    sprintf(message, "%s %s %lu", getCurrentDateTime(), commandType, command.quantity);
     logMessage(THROTTLE_CONTROL_LOGFILE, message);
 }
 
 void handleFailedThrottleCommand(ThrottleControlCommand command) {
-    signalFailedThrottleCommandToEcu();
+    signalAboutFailedThrottleCommandToEcu();
 }
 
-void signalFailedThrottleCommandToEcu() {
-//TODO: Implement signalFailedThrottleCommandToEcu
+void signalAboutFailedThrottleCommandToEcu() {
+//TODO: Implement signalAboutFailedThrottleCommandToEcu
 }
