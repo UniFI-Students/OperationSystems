@@ -111,7 +111,7 @@
       <recent name="F:\OperationSystems\Project\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Target.all">
+  <component name="RunManager" selected="Makefile Target.clean">
     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./Project/app/hmi">
       <envs>
         <env name="DEBUG" value="1" />
@@ -177,8 +177,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Makefile Target.all" />
         <item itemvalue="Makefile Target.clean" />
+        <item itemvalue="Makefile Target.all" />
         <item itemvalue="Makefile Target.Makefile" />
         <item itemvalue="Makefile Target.build/%.o" />
         <item itemvalue="Makefile Target.build" />
