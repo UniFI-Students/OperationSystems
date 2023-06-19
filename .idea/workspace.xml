@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="CMakeRunConfigurationManager">
+    <generated>
+      <config projectName="OperationSystems" targetName="all" />
+      <config projectName="OperationSystems" targetName="buildApp" />
+      <config projectName="OperationSystems" targetName="buildFileObjects" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/Logger.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/Logger.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/Random.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/Random.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/SteerByWire.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/SteerByWire.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/ThrottleControl.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/ThrottleControl.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/hmi.bash" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/dev.makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/Bus.c" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/Bus.h" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface.c" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$/Project">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="Make.Settings">
+    <option name="path" value="\\wsl$\Ubuntu\usr\bin\make" />
+  </component>
+  <component name="MakefileLocalSettings">
+    <option name="toolchainName" value="WSL" />
+    <option name="availableProjects">
+      <map>
+        <entry>
+          <key>
+            <ExternalProjectPojo>
+              <option name="name" value="OperationSystems" />
+              <option name="path" value="$PROJECT_DIR$/Project" />
+            </ExternalProjectPojo>
+          </key>
+          <value>
+            <list>
+              <ExternalProjectPojo>
+                <option name="name" value="OperationSystems" />
+                <option name="path" value="$PROJECT_DIR$/Project" />
+              </ExternalProjectPojo>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="projectSyncType">
+      <map>
+        <entry key="$PROJECT_DIR$/Project" value="RE_IMPORT" />
+      </map>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="OCResolveContextSettings">
+    <option name="configuration" value="$PROJECT_DIR$/Project/src/SteerByWire.c" />
+  </component>
+  <component name="ProjectApplicationVersion">
+    <option name="ide" value="CLion" />
+    <option name="majorVersion" value="2023" />
+    <option name="minorVersion" value="1.1" />
+  </component>
+  <component name="ProjectId" id="2RQ4fOryzHMFcuCKfdlJIpYKylx" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
+    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;//wsl$/Ubuntu/usr/bin/make&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CLionExternalConfigurable&quot;,
+    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\OperationSystems\Project\src" />
+      <recent name="F:\OperationSystems\Project\app" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Makefile Target.all">
+    <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./Project/app/hmi">
+      <envs>
+        <env name="DEBUG" value="1" />
+      </envs>
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="buildApp" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="buildApp" CONFIG_NAME="buildApp" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="buildFileObjects" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="buildFileObjects" CONFIG_NAME="buildFileObjects" version="1">
+      <method v="2">
+        <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Project/Makefile" target="" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="all" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Project/Makefile" target="all" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="build" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Project/Makefile" target="build" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="build/%.o" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Project/Makefile" target="build/%.o" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <configuration name="clean" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Project/Makefile" target="clean" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Makefile Application.all" />
+      <item itemvalue="Makefile Application.buildApp" />
+      <item itemvalue="Makefile Application.buildFileObjects" />
+      <item itemvalue="Makefile Target.Makefile" />
+      <item itemvalue="Makefile Target.all" />
+      <item itemvalue="Makefile Target.build/%.o" />
+      <item itemvalue="Makefile Target.clean" />
+      <item itemvalue="Makefile Target.build" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Makefile Target.clean" />
+        <item itemvalue="Makefile Target.all" />
+        <item itemvalue="Makefile Target.Makefile" />
+        <item itemvalue="Makefile Target.build/%.o" />
+        <item itemvalue="Makefile Target.build" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="" />
+      <created>1687169075762</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1687169075762</updated>
+      <workItem from="1687169077016" duration="29000" />
+      <workItem from="1687169116319" duration="18607000" />
+      <workItem from="1687190942587" duration="5401000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+</project>
