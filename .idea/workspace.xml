@@ -17,21 +17,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BreakByWire.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BreakByWire.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/DateProvider/DateProvider.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/DateProvider/DateProvider.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -207,7 +193,7 @@
       <workItem from="1687169077016" duration="29000" />
       <workItem from="1687169116319" duration="18607000" />
       <workItem from="1687190942587" duration="7092000" />
-      <workItem from="1687205667051" duration="7078000" />
+      <workItem from="1687205667051" duration="8025000" />
     </task>
     <servers />
   </component>
