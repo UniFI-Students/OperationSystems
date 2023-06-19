@@ -17,20 +17,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/Logger.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/Logger.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/Random.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/Random.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/SteerByWire.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/SteerByWire.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/ThrottleControl.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/ThrottleControl.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/hmi.bash" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/dev.makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/Bus.c" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/Bus.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,6 +106,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="F:\OperationSystems\Project\src\HumanMachineInterface" />
       <recent name="F:\OperationSystems\Project\src" />
       <recent name="F:\OperationSystems\Project\app" />
     </key>
@@ -186,8 +177,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Makefile Target.clean" />
         <item itemvalue="Makefile Target.all" />
+        <item itemvalue="Makefile Target.clean" />
         <item itemvalue="Makefile Target.Makefile" />
         <item itemvalue="Makefile Target.build/%.o" />
         <item itemvalue="Makefile Target.build" />
@@ -204,7 +195,7 @@
       <updated>1687169075762</updated>
       <workItem from="1687169077016" duration="29000" />
       <workItem from="1687169116319" duration="18607000" />
-      <workItem from="1687190942587" duration="5401000" />
+      <workItem from="1687190942587" duration="7092000" />
     </task>
     <servers />
   </component>

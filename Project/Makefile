@@ -1,6 +1,6 @@
 ﻿CC = gcc
 CFLAGS =
-C_FILES = $(wildcard src/*.c)
+C_FILES = $(shell find src -name '*.c')
 HMI_OBJ_FILES = build/HumanMachineInterface.o
 SBW_OBJ_FILES = build/SteerByWire.o build/Logger.o
 TC_OBJ_FILES = build/ThrottleControl.o build/Logger.o build/Random.o
@@ -22,7 +22,7 @@ buildApp: $(HMI_OBJ_FILES)
 
 buildFileObjects: $(C_FILES)
 	$(AT) mkdir -p build
-	$(foreach file, $^, ${CC} -c $(file) -o $(file:src/%.c=build/%.o) $(CFLAGS);)
+	$(foreach file, $^, ${CC} -c $(file) -o $(addprefix "build/",$(notdir $(file:%.c=%.o))) $(CFLAGS);)
 
 clean:
 	@echo Removing application
