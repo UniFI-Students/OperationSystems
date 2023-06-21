@@ -1,7 +1,9 @@
 ﻿#include <stdio.h>
 #include <string.h>
-#include <malloc.h>
 #include "HumanMachineInterface.h"
+#include "HumanMachineInterfaceIpc.h"
+#include "../InterProcessComunication/Ipc.h"
+#include "../CentralEcu/CentralEcuIpc.h"
 
 #define START "INIZIO"
 #define PARKING "PARCHEGGIO"
@@ -10,8 +12,9 @@
 void executeHmiReader();
 void executeHmiWriter();
 
-void sendCommandToEcu(HumanMachineInterfaceCommand command);
+void sendCommandToEcu(int socketFd, HumanMachineInterfaceCommand command);
 void receiveMessageFromEcu(char* message);
+
 
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
@@ -33,6 +36,8 @@ void executeHmiReader() {
     char buff[32];
     HumanMachineInterfaceCommand cmd;
 
+    int ecuSocketFd = createUnixSocket(DEFAULT_PROTOCOL);
+
     while (1) {
         scanf("%s", buff);
 
@@ -40,7 +45,7 @@ void executeHmiReader() {
         if (strcmp(PARKING, buff) == 0) cmd.type = Parking;
         if (strcmp(STOP, buff) == 0) cmd.type = Stop;
 
-        sendCommandToEcu(cmd);
+        sendCommandToEcu(ecuSocketFd, cmd);
     }
 }
 
@@ -53,8 +58,8 @@ void executeHmiWriter() {
 }
 
 
-void sendCommandToEcu(HumanMachineInterfaceCommand command) {
-    //TODO: Implement sendCommandToEcu
+void sendCommandToEcu(int ecuSocketFd, HumanMachineInterfaceCommand command) {
+    writeRequest(ecuSocketFd, HumanMachineInterface, &command, sizeof(command));
 }
 
 void receiveMessageFromEcu(char* message) {

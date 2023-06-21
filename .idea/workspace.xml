@@ -17,7 +17,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterfaceIpc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/InterProcessComunication/Ipc.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/InterProcessComunication/Ipc.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -70,7 +80,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="OCResolveContextSettings">
-    <option name="configuration" value="$PROJECT_DIR$/Project/src/BrakeByWire/BreakByWire.c" />
+    <option name="configuration" value="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
@@ -109,11 +119,6 @@
     </key>
   </component>
   <component name="RunManager" selected="Makefile Target.all">
-    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./Project/app/hmi">
       <envs>
         <env name="DEBUG" value="1" />
@@ -130,6 +135,11 @@
     <configuration name="buildFileObjects" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="buildFileObjects" CONFIG_NAME="buildFileObjects" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
@@ -194,6 +204,7 @@
       <workItem from="1687169116319" duration="18607000" />
       <workItem from="1687190942587" duration="7092000" />
       <workItem from="1687205667051" duration="8025000" />
+      <workItem from="1687348830187" duration="8932000" />
     </task>
     <servers />
   </component>
