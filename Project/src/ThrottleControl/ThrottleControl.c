@@ -7,7 +7,10 @@
 #include "../DateProvider/DateProvider.h"
 
 #define INCREMENT "INCREMENTO"
-#define THROTTLE_CONTROL_LOGFILE "throttle.logMessage"
+
+#define THROTTLE_CONTROL_LOGFILE "throttle.log"
+#define THROTTLE_CONTROL_ERROR_LOGFILE "throttle.eLog"
+
 #define FAIL_PROBABILITY 1e-5
 
 void receiveCommandFromEcu(ThrottleControlCommand *pCommand);
@@ -22,6 +25,9 @@ void signalAboutFailedThrottleCommandToEcu();
 int main(){
     startRand(time(NULL));
     ThrottleControlCommand cmd;
+
+    setLogFileName(THROTTLE_CONTROL_LOGFILE);
+    setErrorLogFileName(THROTTLE_CONTROL_ERROR_LOGFILE);
 
     while(1){
         receiveCommandFromEcu(&cmd);
@@ -52,7 +58,7 @@ void handleSucceedThrottleCommand(ThrottleControlCommand command) {
     }
 
     sprintf(message, "%s %s %lu", getCurrentDateTime(), commandType, command.quantity);
-    logMessage(THROTTLE_CONTROL_LOGFILE, message);
+    logMessage(message);
 }
 
 void handleFailedThrottleCommand(ThrottleControlCommand command) {

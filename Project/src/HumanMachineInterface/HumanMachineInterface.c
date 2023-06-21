@@ -1,7 +1,9 @@
 ﻿#include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 #include "HumanMachineInterface.h"
 #include "HumanMachineInterfaceIpc.h"
+#include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
 #include "../CentralEcu/CentralEcuIpc.h"
 
@@ -10,16 +12,18 @@
 #define STOP "ARRESTO"
 
 void executeHmiReader();
+
 void executeHmiWriter();
 
-void sendCommandToEcu(int socketFd, HumanMachineInterfaceCommand command);
-void receiveMessageFromEcu(char* message);
+void sendCommandToEcu(HumanMachineInterfaceCommand command);
+
+void receiveMessageFromEcu(char *message);
 
 
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
-        perror("Unassigned argument for running topology.");
-        return -1;
+        logError("Unassigned argument for running topology.");
+        exit(-1);
     }
 
     if (strcmp(argv[1], "-w") == 0) {
@@ -36,7 +40,6 @@ void executeHmiReader() {
     char buff[32];
     HumanMachineInterfaceCommand cmd;
 
-    int ecuSocketFd = createUnixSocket(DEFAULT_PROTOCOL);
 
     while (1) {
         scanf("%s", buff);
@@ -45,11 +48,25 @@ void executeHmiReader() {
         if (strcmp(PARKING, buff) == 0) cmd.type = Parking;
         if (strcmp(STOP, buff) == 0) cmd.type = Stop;
 
-        sendCommandToEcu(ecuSocketFd, cmd);
+        sendCommandToEcu(cmd);
     }
 }
 
+int hmiSocketFd;
+
+
 void executeHmiWriter() {
+    hmiSocketFd = createInetSocket(DEFAULT_PROTOCOL);
+    if (hmiSocketFd < 0) {
+        logLastError();
+        return;
+    }
+    if (connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT) < 0) {
+        logLastError();
+        closeSocket(hmiSocketFd);
+        return;
+    }
+
     while (1) {
         char message[32];
         receiveMessageFromEcu(message);
@@ -58,12 +75,39 @@ void executeHmiWriter() {
 }
 
 
-void sendCommandToEcu(int ecuSocketFd, HumanMachineInterfaceCommand command) {
-    writeRequest(ecuSocketFd, HumanMachineInterface, &command, sizeof(command));
+void sendCommandToEcu(HumanMachineInterfaceCommand command) {
+    int ecuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
+    if (ecuSocketFd < 0) {
+        logLastError();
+        return;
+    }
+    if (connectLocalInetSocket(ecuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
+        logLastError();
+        closeSocket(ecuSocketFd);
+        return;
+    }
+    if (writeRequest(ecuSocketFd, HumanMachineInterfaceToCentralEcuRequester, &command, sizeof(command)) < 0) {
+        logLastError();
+        exit(-1);
+    }
+    if (closeSocket(ecuSocketFd) < 0) logLastError();
 }
 
-void receiveMessageFromEcu(char* message) {
-    //TODO: Implement receiveMessageFromEcu
+void receiveMessageFromEcu(char *message) {
+    int requesterId;
+    void *requestData;
+    int requestDataLength;
+
+    if (readRequest(hmiSocketFd, &requesterId, &requestData, &requestDataLength) < 0) logLastError();
+    switch ((HmiRequester) requesterId) {
+        case CentralEcuToHmiRequester:
+            strcpy(message, requestData);
+            break;
+        default:
+            logError("Unknown request arrived.");
+            break;
+    }
+    free(requestData);
 }
 
 

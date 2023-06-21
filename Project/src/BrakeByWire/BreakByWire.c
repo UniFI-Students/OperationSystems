@@ -7,6 +7,7 @@
 #define BRAKE "FRENO"
 #define STOP_CAR "ARRESTO AUTO"
 #define BREAK_BY_WIRE_LOGFILE "brake.log"
+#define BREAK_BY_WIRE_ERROR_LOGFILE "brake.eLog"
 
 void handleBrakeCommand(BrakeByWireCommand command);
 
@@ -17,6 +18,8 @@ void handleStopSignal();
 
 int main(){
     BrakeByWireCommand cmd;
+    setLogFileName(BREAK_BY_WIRE_LOGFILE);
+    setErrorLogFileName(BREAK_BY_WIRE_ERROR_LOGFILE);
     while(1)
     {
         if (receiveCommandFromEcu(&cmd)>=0)
@@ -49,9 +52,9 @@ void handleBrakeCommand(BrakeByWireCommand command) {
     }
 
     sprintf(message, "%s %s %lu", getCurrentDateTime(), commandType, command.quantity);
-    logMessage(BREAK_BY_WIRE_LOGFILE, message);
+    logMessage(message);
 }
 
 void handleStopSignal() {
-    logMessage(BREAK_BY_WIRE_LOGFILE, STOP_CAR);
+    logMessage(STOP_CAR);
 }

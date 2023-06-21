@@ -1,11 +1,25 @@
-#define CENTRAL_ECU_SOCKET_NAME "cEcu"
+#define CENTRAL_ECU_UNIX_SOCKET_NAME "cEcuSocket"
+#define CENTRAL_ECU_INET_SOCKET_PORT 1020
 
-typedef enum CEcuExternalCommunicator CEcuExternalCommunicator;
+typedef enum HmiCommandType HmiCommandType;
+typedef struct HumanMachineInterfaceCommand HumanMachineInterfaceCommand;
+typedef enum CentralEcuRequester CentralEcuRequester;
 
-enum CEcuExternalCommunicator
+enum CentralEcuRequester
 {
-    HumanMachineInterface,
-    FrontWindShieldCamera,
-    ForwardFacingRadar,
-    ParkAssist
+    HumanMachineInterfaceToCentralEcuRequester,
+    FrontWindShieldCameraToCentralEcuRequester,
+    ForwardFacingRadarToCentralEcuRequester,
+    ParkAssistToCentralEcuRequester
+};
+
+enum HmiCommandType {
+    Start,
+    Parking,
+    Stop
+};
+
+
+struct HumanMachineInterfaceCommand {
+    HmiCommandType type;
 };

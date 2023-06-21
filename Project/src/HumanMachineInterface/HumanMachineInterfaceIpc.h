@@ -1,18 +1,10 @@
-#define HUMAN_MACHINE_INTERFACE_SOCKET_NAME "hmi"
+#define HUMAN_MACHINE_INTERFACE_UNIX_SOCKET_NAME "hmiSocket"
+#define HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT 1021
 
-typedef enum HmiCommandType HmiCommandType;
-typedef struct HumanMachineInterfaceCommand HumanMachineInterfaceCommand;
+typedef enum HmiRequester HmiRequester;
 
-enum HmiCommandType {
-    Start,
-    Parking,
-    Stop
-};
-
-enum HmiExternalCommunicator
+enum HmiRequester
 {
-    CentralEcu
+    CentralEcuToHmiRequester
 };
-struct HumanMachineInterfaceCommand {
-    HmiCommandType type;
-};
+

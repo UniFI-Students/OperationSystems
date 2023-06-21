@@ -3,6 +3,7 @@
 #include "../Logger/Logger.h"
 
 #define PARK_ASSIST_LOGFILE "assist.log"
+#define PARK_ASSIST_ERROR_LOGFILE "assist.eLog"
 
 void receiveParkCommandFromEcu();
 
@@ -14,6 +15,10 @@ int readBytes(char buffer[8]);
 
 int main(){
     char buffer[8];
+
+    setLogFileName(PARK_ASSIST_LOGFILE);
+    setErrorLogFileName(PARK_ASSIST_ERROR_LOGFILE);
+
     while(1)
     {
         receiveParkCommandFromEcu();
@@ -24,7 +29,7 @@ int main(){
             if (readBytes(buffer) == 8)
             {
                 sendBytesToParkAssist(buffer);
-                logMessage(PARK_ASSIST_LOGFILE, buffer);
+                logMessage(buffer);
             }
             sleep(1);
         }

@@ -16,19 +16,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterfaceIpc.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/InterProcessComunication/Ipc.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/InterProcessComunication/Ipc.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.h" afterDir="false" />
-    </list>
+    <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,7 +94,7 @@
     &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;CLionExternalConfigurable&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;CPPToolchains&quot;,
     &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
@@ -118,8 +106,13 @@
       <recent name="F:\OperationSystems\Project\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Target.all">
-    <configuration name="all" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./Project/app/hmi">
+  <component name="RunManager" selected="Makefile Application.CentralEcu">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="CentralEcu" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./Project/app/cecu">
       <envs>
         <env name="DEBUG" value="1" />
       </envs>
@@ -127,7 +120,10 @@
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
     </configuration>
-    <configuration name="buildApp" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="buildApp" CONFIG_NAME="buildApp" version="1">
+    <configuration name="Hmi reader" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="-r" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./Project/app/hmi">
+      <envs>
+        <env name="DEBUG" value=" 1" />
+      </envs>
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
       </method>
@@ -135,11 +131,6 @@
     <configuration name="buildFileObjects" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="buildFileObjects" CONFIG_NAME="buildFileObjects" version="1">
       <method v="2">
         <option name="CLION.COMPOUND.BUILD" enabled="true" />
-      </method>
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
       </method>
     </configuration>
     <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
@@ -173,8 +164,8 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Makefile Application.all" />
-      <item itemvalue="Makefile Application.buildApp" />
+      <item itemvalue="Makefile Application.Hmi reader" />
+      <item itemvalue="Makefile Application.CentralEcu" />
       <item itemvalue="Makefile Application.buildFileObjects" />
       <item itemvalue="Makefile Target.Makefile" />
       <item itemvalue="Makefile Target.all" />
@@ -204,11 +195,16 @@
       <workItem from="1687169116319" duration="18607000" />
       <workItem from="1687190942587" duration="7092000" />
       <workItem from="1687205667051" duration="8025000" />
-      <workItem from="1687348830187" duration="8932000" />
+      <workItem from="1687348830187" duration="11171000" />
+      <workItem from="1687361405854" duration="11108000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
   </component>
 </project>
