@@ -11,6 +11,6 @@ void closeErrorLogFileDescriptor();
 
 void logMessage(const char *message);
 void logLastError();
-void logError(const char *message);
+void logLastErrorWithMessage(const char *message);
 
 #endif

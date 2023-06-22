@@ -36,14 +36,14 @@ void setLogFileName(const char *logFileName){
 
 void setErrorLogFileName(const char *errorLogFileName)
 {
-    if (getcwd(errorLogFilePath, sizeof(logFilePath)) == NULL) {
+    if (getcwd(errorLogFilePath, sizeof(errorLogFilePath)) == NULL) {
         perror(strerror(errno));
         exit(-1);
     }
     strcat(errorLogFilePath, "/");
     strcat(errorLogFilePath, LOG_DIRECTORY);
 
-    createDirectoryIfDoesNotExist(logFilePath);
+    createDirectoryIfDoesNotExist(errorLogFilePath);
 
     strcat(errorLogFilePath, "/");
     strcat(errorLogFilePath, errorLogFileName);
@@ -69,16 +69,20 @@ void logMessage(const char *message){
 void logLastError(){
     perror(strerror(errno));
     fprintf(errorLogFdPtr, "%s: Error (%d) - %s\n", getCurrentDateTime(), errno, strerror(errno));
+    fflush(errorLogFdPtr);
     errno = 0;
 }
 
-void logError(const char *message){
+void logLastErrorWithMessage(const char *message){
     perror(message);
-    fprintf(errorLogFdPtr, "%s: Error (%d) - %s\n", getCurrentDateTime(), errno, strerror(errno));
+    fprintf(errorLogFdPtr, "%s: Error happened - %s\n", getCurrentDateTime(), message);
+    fflush(errorLogFdPtr);
 }
 
 void createDirectoryIfDoesNotExist(const char* path) {
     struct stat dirStat;
-    if (stat(path, &dirStat) < 0) mkdir(path, 666);
+    if (stat(path, &dirStat) < 0) {
+        if (mkdir(path, 0666) != 0) perror(strerror(errno));
+    }
 
 }

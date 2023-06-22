@@ -75,8 +75,9 @@ int main() {
     }
     int hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
     while (hmiConnectionRes < 0) {
-        logError("Trying to connect to hmi.");
+        logLastErrorWithMessage("Trying to connect to hmi");
         hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
+        sleep(1);
     }
 
 
@@ -110,7 +111,7 @@ int main() {
                 handlePaRequest(requestData, requestDataLength);
                 break;
             default:
-                logError("Unknown request arrived.");
+                logLastErrorWithMessage("Unknown request arrived.");
                 break;
         }
         free(requestData);
@@ -127,6 +128,7 @@ void closeFileDescriptors() {
     closeSocket(cEcuSocketFd);
     closeSocket(hmiSocketFd);
     closeLogFileDescriptor();
+    closeErrorLogFileDescriptor();
 }
 
 

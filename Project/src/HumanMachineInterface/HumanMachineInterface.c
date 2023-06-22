@@ -29,7 +29,7 @@ int main(int argc, char *argv[]) {
     instantiateErrorLogFileDescriptor();
 
     if (argc <= 1) {
-        logError("Unassigned argument for running topology.");
+        logLastErrorWithMessage("Unassigned argument for running topology.");
         exit(-1);
     }
 
@@ -123,7 +123,7 @@ void receiveMessageFromEcu(char *message) {
             strcpy(message, requestData);
             break;
         default:
-            logError("Unknown request arrived.");
+            logLastErrorWithMessage("Unknown request arrived.");
             break;
     }
     free(requestData);
