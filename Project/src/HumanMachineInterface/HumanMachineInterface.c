@@ -99,7 +99,7 @@ void sendCommandToEcu(HumanMachineInterfaceCommand command) {
         return;
     }
     if (connectLocalInetSocket(ecuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
-        logLastError();
+        logLastErrorWithMessage("Could not establish connection to CentralEcu");
         closeSocket(ecuSocketFd);
         return;
     }

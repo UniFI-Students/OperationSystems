@@ -63,7 +63,8 @@ void closeErrorLogFileDescriptor(){
 }
 
 void logMessage(const char *message){
-    fprintf(logFdPtr, "%s", message);
+    fprintf(logFdPtr, "%s\n", message);
+    fflush(logFdPtr);
 }
 
 void logLastError(){

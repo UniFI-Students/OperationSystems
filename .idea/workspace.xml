@@ -18,11 +18,12 @@
   <component name="ChangeListManager">
     <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/BrakeByWire/BreakByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BreakByWire.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/DateProvider/DateProvider.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/DateProvider/DateProvider.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/Logger/Logger.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Logger/Logger.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/Logger/Logger.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Logger/Logger.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,6 +90,7 @@
   </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
+    "ATTACH_DIALOG_SELECTED_HOST": "\\\\wsl$\\Ubuntu\\",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "RunOnceActivity.cidr.known.project.marker": "true",
     "WebServerToolWindowFactoryState": "false",
@@ -113,7 +115,18 @@
       <recent name="F:\OperationSystems\Project\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Target.clean">
+  <component name="RunManager" selected="Makefile Application.CentralEcu">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BrakeByWire" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$/Project/app" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="bbw">
+      <envs>
+        <env name="DEBUG" value=" 1" />
+      </envs>
+      <method v="2" />
+    </configuration>
     <configuration name="CentralEcu" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$/Project/app" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./cecu">
       <envs>
         <env name="DEBUG" value="1" />
@@ -131,11 +144,6 @@
         <env name="DEBUG" value="1" />
       </envs>
       <method v="2" />
-    </configuration>
-    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
-      <method v="2">
-        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
-      </method>
     </configuration>
     <configuration name="Makefile" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
       <makefile filename="$PROJECT_DIR$/Project/Makefile" target="" workingDirectory="" arguments="">
@@ -168,6 +176,7 @@
       <method v="2" />
     </configuration>
     <list>
+      <item itemvalue="Makefile Application.BrakeByWire" />
       <item itemvalue="Makefile Application.Hmi reader" />
       <item itemvalue="Makefile Application.Hmi writer" />
       <item itemvalue="Makefile Application.CentralEcu" />
@@ -201,28 +210,13 @@
       <workItem from="1687205667051" duration="8025000" />
       <workItem from="1687348830187" duration="11171000" />
       <workItem from="1687361405854" duration="11144000" />
-      <workItem from="1687422321236" duration="9464000" />
+      <workItem from="1687422321236" duration="14318000" />
+      <workItem from="1687441405276" duration="8245000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
-  </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c</url>
-          <line>161</line>
-          <option name="timeStamp" value="2" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Project/src/Logger/Logger.c</url>
-          <line>61</line>
-          <option name="timeStamp" value="22" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

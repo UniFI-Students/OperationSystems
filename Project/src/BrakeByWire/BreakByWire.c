@@ -1,5 +1,6 @@
 #include <unistd.h>
 #include <stdio.h>
+#include <signal.h>
 #include "BreakByWire.h"
 #include "../Logger/Logger.h"
 #include "../DateProvider/DateProvider.h"
@@ -16,28 +17,38 @@ ssize_t receiveStopSignalFromEcu();
 
 void handleStopSignal();
 
+void registerSignalHandlers();
+void closeFileDescriptors();
+
 int main(){
     BrakeByWireCommand cmd;
     setLogFileName(BREAK_BY_WIRE_LOGFILE);
     setErrorLogFileName(BREAK_BY_WIRE_ERROR_LOGFILE);
+    instantiateLogFileDescriptor();
+    instantiateErrorLogFileDescriptor();
+
+    registerSignalHandlers();
     while(1)
     {
-        if (receiveCommandFromEcu(&cmd)>=0)
-            handleBrakeCommand(cmd);
-        if (receiveStopSignalFromEcu() >= 0)
-            handleStopSignal();
+        receiveCommandFromEcu(&cmd);
+        handleBrakeCommand(cmd);
     }
 }
 
-
-
-ssize_t receiveStopSignalFromEcu() {
-    //TODO: Implement receiveStopSignalFromEcu
-    return 0;
+void registerSignalHandlers() {
+    signal(SIGUSR1, handleStopSignal);
+    signal(SIGINT, closeFileDescriptors);
 }
+
+void closeFileDescriptors(){
+    closeLogFileDescriptor();
+    closeErrorLogFileDescriptor();
+}
+
 
 ssize_t receiveCommandFromEcu(BrakeByWireCommand *pCommand) {
     //TODO: Implement receiveCommandFromEcu
+    pCommand->type = -1;
 }
 
 void handleBrakeCommand(BrakeByWireCommand command) {
@@ -49,6 +60,8 @@ void handleBrakeCommand(BrakeByWireCommand command) {
         case Brake:
             commandType = BRAKE;
             break;
+        default:
+            return;
     }
 
     sprintf(message, "%s %s %lu", getCurrentDateTime(), commandType, command.quantity);
