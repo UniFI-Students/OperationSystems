@@ -1,3 +1,6 @@
+#ifndef OS_CENTRAL_ECU_H
+#define OS_CENTRAL_ECU_H
+
 #define CENTRAL_ECU_UNIX_SOCKET_NAME "cEcuSocket"
 #define CENTRAL_ECU_INET_SOCKET_PORT 1020
 
@@ -23,3 +26,5 @@ enum HmiCommandType {
 struct HumanMachineInterfaceCommand {
     HmiCommandType type;
 };
+
+#endif

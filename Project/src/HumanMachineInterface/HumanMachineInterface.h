@@ -1,0 +1,4 @@
+#ifndef HUMAN_MACHINE_INTERFACE_H
+#define HUMAN_MACHINE_INTERFACE_H
+
+#endif

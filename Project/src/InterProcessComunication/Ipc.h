@@ -1,3 +1,6 @@
+#ifndef INTER_PROCESS_COMMUNICATION_H
+#define INTER_PROCESS_COMMUNICATION_H
+
 #define DEFAULT_PROTOCOL 0
 
 int createUnixSocket(int protocol);
@@ -20,3 +23,5 @@ int closeSocket(int socketFd);
 int readRequest(int fd, int *requesterId, void **requestData, int *requestDataLengthInBytes);
 
 int writeRequest(int fd, int requesterId, const void *requestData, int requestDataLengthInBytes);
+
+#endif

@@ -10,8 +10,12 @@
 #include "../InterProcessComunication/Ipc.h"
 #include "../HumanMachineInterface/HumanMachineInterfaceIpc.h"
 
+#define CENTRAL_ECU_LOGFILE "ECU.log"
+#define CENTRAL_ECU_ERROR_LOGFILE "ECU.eLog"
 
 int cEcuSocketFd;
+int hmiSocketFd;
+
 int velocity;
 bool isStarted;
 
@@ -35,67 +39,94 @@ void handleStopCommandFromHmi();
 
 void sendMessageToHmi(char *message);
 
+void closeFileDescriptors();
+
 int main() {
     cEcuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
     velocity = 0;
     isStarted = false;
+
+    setLogFileName(CENTRAL_ECU_LOGFILE);
+    setErrorLogFileName(CENTRAL_ECU_ERROR_LOGFILE);
+    instantiateLogFileDescriptor();
+    instantiateErrorLogFileDescriptor();
+
     if (cEcuSocketFd < 0) {
         logLastError();
+        closeFileDescriptors();
         exit(-1);
     }
     if (bindLocalInetSocket(cEcuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
         logLastError();
+        closeFileDescriptors();
         exit(-1);
     }
     if (listenSocket(cEcuSocketFd, 5) < 0) {
         logLastError();
+        closeFileDescriptors();
         exit(-1);
     }
 
+    hmiSocketFd = createInetSocket(DEFAULT_PROTOCOL);
+    if (hmiSocketFd < 0) {
+        logLastError();
+        closeFileDescriptors();
+        exit(-1);
+    }
+    int hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
+    while (hmiConnectionRes < 0) {
+        logError("Trying to connect to hmi.");
+        hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
+    }
+
+
     registerSigIntHandler();
+
     while (1) {
         int acceptedSocket = acceptInetSocket(cEcuSocketFd);
         if (acceptedSocket < 0) {
             logLastError();
+            closeFileDescriptors();
             exit(-1);
         }
 
-        int forkedPId = fork();
-        if (forkedPId == 0) {
-            sleep(2);
-            close(cEcuSocketFd);
-            int requesterId;
-            void *requestData;
-            int requestDataLength;
+        int requesterId;
+        void *requestData;
+        int requestDataLength;
 
-            if (readRequest(acceptedSocket, &requesterId, &requestData, &requestDataLength) < 0) logLastError();
+        if (readRequest(acceptedSocket, &requesterId, &requestData, &requestDataLength) < 0) logLastError();
 
-            switch ((CentralEcuRequester) requesterId) {
-                case HumanMachineInterfaceToCentralEcuRequester:
-                    handleHmiRequest(requestData, requestDataLength);
-                    break;
-                case FrontWindShieldCameraToCentralEcuRequester:
-                    handleFwscRequest(requestData, requestDataLength);
-                    break;
-                case ForwardFacingRadarToCentralEcuRequester:
-                    handleFfrRequest(requestData, requestDataLength);
-                    break;
-                case ParkAssistToCentralEcuRequester:
-                    handlePaRequest(requestData, requestDataLength);
-                    break;
-                default:
-                    logError("Unknown request arrived.");
-                    break;
-            }
-
-            free(requestData);
-            exit(0);
+        switch ((CentralEcuRequester) requesterId) {
+            case HumanMachineInterfaceToCentralEcuRequester:
+                handleHmiRequest(requestData, requestDataLength);
+                break;
+            case FrontWindShieldCameraToCentralEcuRequester:
+                handleFwscRequest(requestData, requestDataLength);
+                break;
+            case ForwardFacingRadarToCentralEcuRequester:
+                handleFfrRequest(requestData, requestDataLength);
+                break;
+            case ParkAssistToCentralEcuRequester:
+                handlePaRequest(requestData, requestDataLength);
+                break;
+            default:
+                logError("Unknown request arrived.");
+                break;
         }
+        free(requestData);
         if (closeSocket(acceptedSocket) < 0) {
             logLastError();
+            closeFileDescriptors();
             exit(-1);
         }
     }
+
+}
+
+void closeFileDescriptors() {
+    closeSocket(cEcuSocketFd);
+    closeSocket(hmiSocketFd);
+    closeLogFileDescriptor();
 }
 
 
@@ -104,7 +135,7 @@ void registerSigIntHandler() {
 }
 
 void handleInterruptSignal() {
-    closeSocket(cEcuSocketFd);
+    closeFileDescriptors();
     exit(0);
 }
 
@@ -137,24 +168,10 @@ void handleStopCommandFromHmi() {
     //TODO: Implement handleStopCommandFromHmi
 }
 
-void sendMessageToHmi(char *message)
-{
-    //TODO: Implement sendMessageToHmi
-    int hmiSocketFd = createInetSocket(DEFAULT_PROTOCOL);
-    if (hmiSocketFd < 0) {
-        logLastError();
-        return;
-    }
-    if (connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT) < 0) {
-        logLastError();
-        closeSocket(hmiSocketFd);
-        return;
-    }
+void sendMessageToHmi(char *message) {
     if (writeRequest(hmiSocketFd, CentralEcuToHmiRequester, message, strlen(message)) < 0) {
         logLastError();
-        exit(-1);
     }
-    if (closeSocket(hmiSocketFd) < 0) logLastError();
 }
 
 void handleFwscRequest(void *pVoid, int length) {
