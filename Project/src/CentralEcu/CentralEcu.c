@@ -19,6 +19,7 @@ enum CarState {
 } typedef CarState;
 
 int cEcuSocketFd;
+int acceptedSocket;
 
 
 int steerByWirePid;
@@ -103,7 +104,7 @@ int main() {
     registerSignalHandlers();
 
     while (1) {
-        int acceptedSocket = acceptInetSocket(cEcuSocketFd);
+        acceptedSocket = acceptInetSocket(cEcuSocketFd);
         if (acceptedSocket < 0) {
             logLastError();
             closeFileDescriptors();
@@ -134,6 +135,7 @@ int main() {
                 break;
         }
         free(requestData);
+
         if (closeSocket(acceptedSocket) < 0) {
             logLastError();
             closeFileDescriptors();
@@ -147,6 +149,7 @@ void closeFileDescriptors() {
     closeLogFileDescriptor();
     closeErrorLogFileDescriptor();
     closeSocket(cEcuSocketFd);
+    closeSocket(acceptedSocket);
 }
 
 
