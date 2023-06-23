@@ -43,7 +43,10 @@ CarState carState;
 
 
 void registerSignalHandlers();
-void handleInterruptSignal();
+void handleThrottleFailSignal();
+void handleTerminateSignal();
+
+void terminateProgramExecution(int status);
 
 void handleHmiRequest(const void *requestDataPtr, unsigned int requestDataLength);
 
@@ -65,10 +68,13 @@ void handleStopCommandFromHmi();
 void closeFileDescriptors();
 
 void runActuators();
+void stopActuators();
 
 void runSensors();
+void stopSensors();
 
 void runParkingSensors();
+void stopParkingSensors();
 
 
 void initiateParking();
@@ -79,6 +85,8 @@ void execEcuChildProcess(const char *childName);
 void execEcuChildProcessWithIntArgument(const char *childName, int arg);
 
 
+
+void closeChildProcesses();
 
 int main() {
     cEcuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
@@ -92,18 +100,15 @@ int main() {
 
     if (cEcuSocketFd < 0) {
         logLastError();
-        closeFileDescriptors();
-        exit(-1);
+        terminateProgramExecution(-1);
     }
     if (bindLocalInetSocket(cEcuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
         logLastError();
-        closeFileDescriptors();
-        exit(-1);
+        terminateProgramExecution(-1);
     }
     if (listenSocket(cEcuSocketFd, 5) < 0) {
         logLastError();
-        closeFileDescriptors();
-        exit(-1);
+        terminateProgramExecution(-1);
     }
 
 
@@ -115,8 +120,7 @@ int main() {
         acceptedSocket = acceptInetSocket(cEcuSocketFd);
         if (acceptedSocket < 0) {
             logLastError();
-            closeFileDescriptors();
-            exit(-1);
+            terminateProgramExecution(-1);
         }
 
         int requesterId;
@@ -146,8 +150,7 @@ int main() {
 
         if (closeSocket(acceptedSocket) < 0) {
             logLastError();
-            closeFileDescriptors();
-            exit(-1);
+            terminateProgramExecution(-1);
         }
     }
 
@@ -162,13 +165,34 @@ void closeFileDescriptors() {
 
 
 void registerSignalHandlers() {
-    signal(SIGINT, handleInterruptSignal);
     signal(SIGCHLD, SIG_IGN);
+    signal(SIG_THROTTLE_FAIL, handleThrottleFailSignal);
+    signal(SIGTERM, handleTerminateSignal);
 }
 
-void handleInterruptSignal() {
+void handleThrottleFailSignal() {
+    velocity = 0;
+    sendMessageToHmi("Throttle failed. Terminating current execution.");
+    stopSensors();
+    stopParkingSensors();
+    stopActuators();
+    carState = CarStateNone;
+}
+
+void handleTerminateSignal(){
+    terminateProgramExecution(0);
+}
+
+void terminateProgramExecution(int status) {
     closeFileDescriptors();
-    exit(0);
+    closeChildProcesses();
+    exit(status);
+}
+
+void closeChildProcesses() {
+    stopActuators();
+    stopParkingSensors();
+    stopSensors();
 }
 
 void handleHmiRequest(const void *requestDataPtr, unsigned int requestDataLength) {
@@ -198,6 +222,19 @@ void handleStartCommandFromHmi() {
     runSensors();
 }
 
+void handleParkingCommandFromHmi() {
+    if (carState != CarStateStarted) return;
+    initiateParking();
+
+}
+
+void handleStopCommandFromHmi() {
+    if (carState != CarStateStarted) return;
+    velocity = 0;
+    sendStopSignalToBbw(brakeByWirePid);
+}
+
+
 
 void runParkingSensors() {
     parkAssistPid = fork();
@@ -207,8 +244,8 @@ void runParkingSensors() {
 }
 
 void stopParkingSensors() {
-    if (parkAssistPid != 0) kill(parkAssistPid, SIGINT);
-    if (surroundViewCamerasPid != 0) kill(surroundViewCamerasPid, SIGINT);
+    if (parkAssistPid != 0) kill(parkAssistPid, SIGKILL);
+    if (surroundViewCamerasPid != 0) kill(surroundViewCamerasPid, SIGKILL);
     parkAssistPid = 0;
     surroundViewCamerasPid = 0;
 }
@@ -225,8 +262,8 @@ void runSensors() {
 
 
 void stopSensors(){
-    if (frontWindShieldCameraPid != 0) kill(frontWindShieldCameraPid, SIGINT);
-    if (forwardFacingRadarPid != 0) kill(forwardFacingRadarPid, SIGINT);
+    if (frontWindShieldCameraPid != 0) kill(frontWindShieldCameraPid, SIGKILL);
+    if (forwardFacingRadarPid != 0) kill(forwardFacingRadarPid, SIGKILL);
     frontWindShieldCameraPid = 0;
     forwardFacingRadarPid = 0;
 }
@@ -248,9 +285,9 @@ void getCwdWithFileName(const char *fileName, char* buff, int size){
 }
 
 void stopActuators(){
-    if (steerByWirePid != 0) kill(steerByWirePid, SIGINT);
-    if (throttleControlPid != 0) kill(throttleControlPid, SIGINT);
-    if (brakeByWirePid != 0) kill(brakeByWirePid, SIGINT);
+    if (steerByWirePid != 0) kill(steerByWirePid, SIGKILL);
+    if (throttleControlPid != 0) kill(throttleControlPid, SIGKILL);
+    if (brakeByWirePid != 0) kill(brakeByWirePid, SIGKILL);
     steerByWirePid = 0;
     throttleControlPid = 0;
     brakeByWirePid = 0;
@@ -276,20 +313,13 @@ void execEcuChildProcessWithIntArgument(const char *childName, int arg) {
     exit(-1);
 }
 
-void handleParkingCommandFromHmi() {
-    initiateParking();
 
-}
 
 void initiateParking() {
     //TODO: Implement initiateParking
     carState = CarStateParking;
 }
 
-void handleStopCommandFromHmi() {
-    velocity = 0;
-    sendStopSignalToBbw(brakeByWirePid);
-}
 
 
 
