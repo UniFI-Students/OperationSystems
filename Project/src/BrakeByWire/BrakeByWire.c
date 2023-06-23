@@ -6,6 +6,8 @@
 #include "../Logger/Logger.h"
 #include "../DateProvider/DateProvider.h"
 #include "../InterProcessComunication/Ipc.h"
+#include "../CentralEcu/CentralEcuBbwIpc/CentralEcuBbwIpc.h"
+#include "../Shared/Consts.h"
 
 #define BRAKE "FRENO"
 #define STOP_CAR "ARRESTO AUTO"
@@ -59,7 +61,7 @@ int main(){
 }
 
 void registerSignalHandlers() {
-    signal(SIGUSR1, handleStopSignal);
+    signal(SIG_STOP_CAR, handleStopSignal);
     signal(SIGINT, closeFileDescriptors);
 }
 
@@ -79,7 +81,7 @@ void receiveCommandFromEcu(BrakeByWireCommand *pCommand) {
 
     int requesterId;
     void *requestData;
-    int requestDataLength;
+    unsigned int requestDataLength;
 
     if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0){
         logLastError();
@@ -111,7 +113,7 @@ void handleBrakeCommand(BrakeByWireCommand command) {
 
     switch (command.type) {
 
-        case Brake:
+        case Decrement:
             commandType = BRAKE;
             break;
         default:

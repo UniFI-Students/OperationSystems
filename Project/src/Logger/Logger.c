@@ -6,8 +6,8 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 #include "../DateProvider/DateProvider.h"
+#include "../Shared/Consts.h"
 
-#define LOG_DIRECTORY "logs"
 
 char logFilePath[128];
 char errorLogFilePath[128];

@@ -5,20 +5,14 @@
 #include <stdlib.h>
 #include <string.h>
 #include "CentralEcuIpc.h"
+#include "CentralEcuBbwIpc/CentralEcuBbwIpc.h"
+#include "CentralEcuHmiIpc/CentralEcuHmiIpc.h"
+#include "CentralEcuSbwIpc/CentralEcuSbwIpc.h"
+#include "CentralEcuTcIpc/CentralEcuTcIpc.h"
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
 #include "../HumanMachineInterface/HumanMachineInterfaceIpc.h"
-#include "../BrakeByWire/BrakeByWireIpc.h"
-#include "../SteerByWire/SteerByWireIpc.h"
-
-#define HUMAN_MACHINE_INTERFACE_EXE_FILENAME "hmi"
-#define STEER_BY_WIRE_EXE_FILENAME "sbw"
-#define THROTTLE_CONTROL_EXE_FILENAME "tc"
-#define BRAKE_BY_WIRE_EXE_FILENAME "bbw"
-#define FRONT_WIND_SHIELD_CAMERA_EXE_FILENAME "fwc"
-#define FORWARD_FACING_RADAR_EXE_FILENAME "ffr"
-#define PARK_ASSIST_EXE_FILENAME "pa"
-#define SURROUND_VIEW_CAMERAS_EXE_FILENAME "svc"
+#include "../Shared/Consts.h"
 
 #define CENTRAL_ECU_LOGFILE "ECU.log"
 #define CENTRAL_ECU_ERROR_LOGFILE "ECU.eLog"
@@ -47,25 +41,26 @@ int velocity;
 CarState carState;
 
 
-void handleInterruptSignal();
-
-void handleHmiRequest(const void *requestData, int requestDataLength);
 
 void registerSignalHandlers();
+void handleInterruptSignal();
 
-void handlePaRequest(void *pVoid, int length);
+void handleHmiRequest(const void *requestDataPtr, unsigned int requestDataLength);
 
-void handleFwscRequest(void *pVoid, int length);
+void handlePaRequest(void *requestDataPtr, unsigned int requestDataLength);
 
-void handleFfrRequest(void *pVoid, int length);
+void handleFwcRequest(void *requestDataPtr, unsigned int requestDataLength);
+
+void handleFfrRequest(void *requestDataPtr, unsigned int requestDataLength);
+
+
+
 
 void handleStartCommandFromHmi();
 
 void handleParkingCommandFromHmi();
 
 void handleStopCommandFromHmi();
-
-void sendMessageToHmi(char *message);
 
 void closeFileDescriptors();
 
@@ -75,17 +70,15 @@ void runSensors();
 
 void runParkingSensors();
 
-void sendStopSignalToBreakByWire();
 
 void initiateParking();
 
 void getCwdWithFileName(const char *fileName, char* buff, int size);
 
 void execEcuChildProcess(const char *childName);
+void execEcuChildProcessWithIntArgument(const char *childName, int arg);
 
-void sendBrakeRequestToBbr(int brakeQuantity);
 
-void sendSteerRequestToSbw(SteerByWireCommandType type);
 
 int main() {
     cEcuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
@@ -127,29 +120,29 @@ int main() {
         }
 
         int requesterId;
-        void *requestData;
-        int requestDataLength;
+        void *requestDataPtr;
+        unsigned int requestDataLength;
 
-        if (readRequest(acceptedSocket, &requesterId, &requestData, &requestDataLength) < 0) logLastError();
+        if (readRequest(acceptedSocket, &requesterId, &requestDataPtr, &requestDataLength) < 0) logLastError();
 
         switch ((CentralEcuRequester) requesterId) {
             case HumanMachineInterfaceToCentralEcuRequester:
-                handleHmiRequest(requestData, requestDataLength);
+                handleHmiRequest(requestDataPtr, requestDataLength);
                 break;
             case FrontWindShieldCameraToCentralEcuRequester:
-                handleFwscRequest(requestData, requestDataLength);
+                handleFwcRequest(requestDataPtr, requestDataLength);
                 break;
             case ForwardFacingRadarToCentralEcuRequester:
-                handleFfrRequest(requestData, requestDataLength);
+                handleFfrRequest(requestDataPtr, requestDataLength);
                 break;
             case ParkAssistToCentralEcuRequester:
-                handlePaRequest(requestData, requestDataLength);
+                handlePaRequest(requestDataPtr, requestDataLength);
                 break;
             default:
                 logLastErrorWithMessage("Unknown request arrived.");
                 break;
         }
-        free(requestData);
+        free(requestDataPtr);
 
         if (closeSocket(acceptedSocket) < 0) {
             logLastError();
@@ -178,8 +171,8 @@ void handleInterruptSignal() {
     exit(0);
 }
 
-void handleHmiRequest(const void *requestData, int requestDataLength) {
-    HumanMachineInterfaceCommand *cmdPtr = (HumanMachineInterfaceCommand *) requestData;
+void handleHmiRequest(const void *requestDataPtr, unsigned int requestDataLength) {
+    HumanMachineInterfaceCommand *cmdPtr = (HumanMachineInterfaceCommand *) requestDataPtr;
     switch (cmdPtr->type) {
 
         case Start:
@@ -229,14 +222,7 @@ void runSensors() {
     if (forwardFacingRadarPid == 0) execEcuChildProcess(FORWARD_FACING_RADAR_EXE_FILENAME);
 }
 
-void execEcuChildProcess(const char *childName) {
-    closeFileDescriptors();
-    char buff[128];
-    getCwdWithFileName(childName, buff, sizeof(buff));
-    execl(buff, childName, NULL);
-    logLastError();
-    exit(-1);
-}
+
 
 void stopSensors(){
     if (frontWindShieldCameraPid != 0) kill(frontWindShieldCameraPid, SIGINT);
@@ -246,10 +232,11 @@ void stopSensors(){
 }
 
 void runActuators() {
+    int cEcuPid = getpid();
     steerByWirePid = fork();
     if (steerByWirePid == 0) execEcuChildProcess(STEER_BY_WIRE_EXE_FILENAME);
     throttleControlPid = fork();
-    if (throttleControlPid == 0) execEcuChildProcess(THROTTLE_CONTROL_EXE_FILENAME);
+    if (throttleControlPid == 0) execEcuChildProcessWithIntArgument(THROTTLE_CONTROL_EXE_FILENAME, cEcuPid);
     brakeByWirePid = fork();
     if (brakeByWirePid == 0) execEcuChildProcess(BRAKE_BY_WIRE_EXE_FILENAME);
 }
@@ -269,6 +256,26 @@ void stopActuators(){
     brakeByWirePid = 0;
 }
 
+void execEcuChildProcess(const char *childName) {
+    closeFileDescriptors();
+    char buff[128];
+    getCwdWithFileName(childName, buff, sizeof(buff));
+    execl(buff, childName, NULL);
+    logLastError();
+    exit(-1);
+}
+
+void execEcuChildProcessWithIntArgument(const char *childName, int arg) {
+    closeFileDescriptors();
+    char buff[128];
+    char argStr[16];
+    sprintf(argStr, "%d", arg);
+    getCwdWithFileName(childName, buff, sizeof(buff));
+    execl(buff, childName, argStr, (char*)0);
+    logLastError();
+    exit(-1);
+}
+
 void handleParkingCommandFromHmi() {
     initiateParking();
 
@@ -280,86 +287,23 @@ void initiateParking() {
 }
 
 void handleStopCommandFromHmi() {
-    sendStopSignalToBreakByWire();
     velocity = 0;
+    sendStopSignalToBbw(brakeByWirePid);
 }
 
-void sendStopSignalToBreakByWire() {
-    logMessage("Sending stop signal to brake by wire.");
-    sendMessageToHmi("Sending stop signal to brake by wire.");
-    kill(brakeByWirePid, SIGUSR1);
-}
 
-void sendMessageToHmi(char *message) {
-    int hmiSocketFd = createInetSocket(DEFAULT_PROTOCOL);
-    if (hmiSocketFd < 0) {
-        logLastError();
-        return;
-    }
-    int hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
-    while (hmiConnectionRes < 0) {
-        logLastErrorWithMessage("Trying to connect to hmi");
-        hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
-        sleep(1);
-    }
 
-    if (writeRequest(hmiSocketFd, CentralEcuToHmiRequester, message, strlen(message)) < 0) {
-        logLastError();
-    }
-    closeSocket(hmiSocketFd);
-}
 
-void sendBrakeRequestToBbr(int brakeQuantity) {
-    BrakeByWireCommand cmd;
-    cmd.type = Brake;
-    cmd.quantity = brakeQuantity;
 
-    int bbwSocket = createInetSocket(DEFAULT_PROTOCOL);
-    if (bbwSocket < 0) {
-        logLastError();
-        return;
-    }
-    int bbwConnectionRes = connectLocalInetSocket(bbwSocket, BRAKE_BY_WIRE_INET_SOCKET_PORT);
-    while (bbwConnectionRes < 0) {
-        logLastErrorWithMessage("Trying to connect to bbw");
-        bbwConnectionRes = connectLocalInetSocket(bbwSocket, BRAKE_BY_WIRE_INET_SOCKET_PORT);
-        sleep(1);
-    }
 
-    if (writeRequest(bbwSocket, CentralEcuToBbwRequester, &cmd, sizeof(cmd))) {
-        logLastError();
-    }
-    closeSocket(bbwSocket);
-}
-void sendSteerRequestToSbw(SteerByWireCommandType type){
 
-    SteerByWireCommand cmd;
-    cmd.type = type;
 
-    int swbSocket = createInetSocket(DEFAULT_PROTOCOL);
-    if (swbSocket < 0) {
-        logLastError();
-        return;
-    }
-    int sbwConnectionRes = connectLocalInetSocket(swbSocket, STEER_BY_WIRE_INET_SOCKET_PORT);
-    while (sbwConnectionRes < 0) {
-        logLastErrorWithMessage("Trying to connect to sbw");
-        sbwConnectionRes = connectLocalInetSocket(swbSocket, STEER_BY_WIRE_INET_SOCKET_PORT);
-        sleep(1);
-    }
-
-    if (writeRequest(swbSocket, CentralEcuToSbwRequester, &cmd, sizeof(cmd))) {
-        logLastError();
-    }
-    closeSocket(swbSocket);
-}
-
-void handleFwscRequest(void *pVoid, int length) {
+void handleFwcRequest(void *requestDataPtr, unsigned int requestDataLength) {
     if (carState != CarStateStarted) return;
     printf("FWSC REQUEST\n");
 }
 
-void handleFfrRequest(void *pVoid, int length) {
+void handleFfrRequest(void *requestDataPtr, unsigned int requestDataLength) {
     if (carState != CarStateStarted) return;
     printf("FFR REQUEST\n");
 }
@@ -367,7 +311,7 @@ void handleFfrRequest(void *pVoid, int length) {
 
 
 
-void handlePaRequest(void *pVoid, int length) {
+void handlePaRequest(void *requestDataPtr, unsigned int requestDataLength) {
     if (!carState) return;
     printf("Pa REQUEST\n");
 }

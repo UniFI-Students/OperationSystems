@@ -5,6 +5,7 @@
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
 #include "../CentralEcu/CentralEcuIpc.h"
+#include "../Shared/Consts.h"
 
 #define START "INIZIO"
 #define PARKING "PARCHEGGIO"
@@ -124,7 +125,7 @@ void receiveMessageFromEcu(char *message) {
 
     int requesterId;
     void *requestData;
-    int requestDataLength;
+    unsigned int requestDataLength;
 
     if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0) {
         logLastError();

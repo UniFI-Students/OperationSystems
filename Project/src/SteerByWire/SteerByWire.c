@@ -2,6 +2,7 @@
 #include "SteerByWireIpc.h"
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
+#include "../Shared/Consts.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -110,7 +111,7 @@ bool receiveCommandFromEcu(SteerByWireCommand *pCommand) {
 
     int requesterId;
     void *requestData;
-    int requestDataLength;
+    unsigned int requestDataLength;
 
     if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0){
         logLastError();

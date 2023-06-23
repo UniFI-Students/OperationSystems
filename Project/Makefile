@@ -18,6 +18,7 @@ SBW_OBJ_FILES =	build/SteerByWire.o 			\
 
 #THROTTLE CONTROL
 TC_OBJ_FILES = 	build/ThrottleControl.o 		\
+				build/Ipc.o						\
 				build/Logger.o 					\
 				build/Random.o 					\
 				build/DateProvider.o
@@ -52,7 +53,11 @@ SVC_OBJ_FILES = build/SurroundViewCameras.o 	\
 ECU_OBJ_FILES = build/CentralEcu.o 				\
 				build/Ipc.o 					\
 				build/Logger.o 					\
-				build/DateProvider.o
+				build/DateProvider.o			\
+				build/CentralEcuHmiIpc.o		\
+				build/CentralEcuBbwIpc.o		\
+				build/CentralEcuSbwIpc.o		\
+				build/CentralEcuTcIpc.o
 
 #			END OBJ FILE DEPENDENCIES			#
 

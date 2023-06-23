@@ -88,7 +88,7 @@ int connectLocalInetSocket(int socketFd, int port){
     return connect(socketFd, serverInetSocketAddrPtr, serverInetSocketLen);
 }
 
-int readRequest(int fd, int *requesterId, void **requestData, int *requestDataLengthInBytes) {
+int readRequest(int fd, int *requesterId, void **requestData, unsigned int *requestDataLengthInBytes) {
     read(fd, requesterId, sizeof(int));
     read(fd, requestDataLengthInBytes, sizeof(int));
 
@@ -103,7 +103,7 @@ int readRequest(int fd, int *requesterId, void **requestData, int *requestDataLe
     return 0;
 }
 
-int writeRequest(int fd, int requesterId, const void *requestData, int requestDataLengthInBytes) {
+int writeRequest(int fd, int requesterId, const void *requestData, unsigned int requestDataLengthInBytes) {
     write(fd, &requesterId, sizeof(int));
     write(fd, &requestDataLengthInBytes, sizeof(int));
     write(fd, requestData, requestDataLengthInBytes);

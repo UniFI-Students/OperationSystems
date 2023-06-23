@@ -20,8 +20,8 @@ int listenSocket(int socketFd, int queueLength);
 int closeSocket(int socketFd);
 
 
-int readRequest(int fd, int *requesterId, void **requestData, int *requestDataLengthInBytes);
+int readRequest(int fd, int *requesterId, void **requestData, unsigned int *requestDataLengthInBytes);
 
-int writeRequest(int fd, int requesterId, const void *requestData, int requestDataLengthInBytes);
+int writeRequest(int fd, int requesterId, const void *requestData, unsigned int requestDataLengthInBytes);
 
 #endif
