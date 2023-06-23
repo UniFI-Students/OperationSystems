@@ -20,7 +20,9 @@
     <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/Shared/Consts.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Shared/Consts.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -113,14 +115,14 @@
       <recent name="F:\OperationSystems\Project\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Application.Hmi writer">
+  <component name="RunManager" selected="Makefile Application.CentralEcu">
     <configuration name="BrakeByWire" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$/Project/app" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="bbw">
       <envs>
         <env name="DEBUG" value=" 1" />
       </envs>
       <method v="2" />
     </configuration>
-    <configuration name="CentralEcu" type="CLionNativeAppRunConfigurationType" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$/Project/app" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./ecu">
+    <configuration name="CentralEcu" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="NORMALE" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$/Project/app" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./ecu">
       <envs>
         <env name="DEBUG" value="1" />
       </envs>
@@ -178,8 +180,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Makefile Target.all" />
         <item itemvalue="Makefile Target.clean" />
+        <item itemvalue="Makefile Target.all" />
         <item itemvalue="Makefile Target.cleanLogs" />
       </list>
     </recent_temporary>
@@ -202,7 +204,7 @@
       <workItem from="1687441405276" duration="11367000" />
       <workItem from="1687523229008" duration="13124000" />
       <workItem from="1687537083129" duration="184000" />
-      <workItem from="1687547292445" duration="1433000" />
+      <workItem from="1687547292445" duration="4263000" />
     </task>
     <servers />
   </component>
@@ -216,11 +218,6 @@
           <url>file://$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c</url>
           <line>57</line>
           <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c</url>
-          <line>308</line>
-          <option name="timeStamp" value="23" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

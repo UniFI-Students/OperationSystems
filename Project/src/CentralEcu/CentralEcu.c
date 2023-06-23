@@ -40,10 +40,13 @@ int surroundViewCamerasPid;
 int velocity;
 CarState carState;
 
+char executionType[3];
 
 
 void registerSignalHandlers();
+
 void handleThrottleFailSignal();
+
 void handleTerminateSignal();
 
 void terminateProgramExecution(int status);
@@ -57,8 +60,6 @@ void handleFwcRequest(void *requestDataPtr, unsigned int requestDataLength);
 void handleFfrRequest(void *requestDataPtr, unsigned int requestDataLength);
 
 
-
-
 void handleStartCommandFromHmi();
 
 void handleParkingCommandFromHmi();
@@ -68,27 +69,44 @@ void handleStopCommandFromHmi();
 void closeFileDescriptors();
 
 void runActuators();
+
 void stopActuators();
 
 void runSensors();
+
 void stopSensors();
 
 void runParkingSensors();
+
 void stopParkingSensors();
 
 
 void initiateParking();
 
-void getCwdWithFileName(const char *fileName, char* buff, int size);
+void getCwdWithFileName(const char *fileName, char *buff, int size);
 
 void execEcuChildProcess(const char *childName);
+
 void execEcuChildProcessWithIntArgument(const char *childName, int arg);
 
+void execEcuChildProcessWithArgument(const char *childName, const char *arg);
 
 
 void closeChildProcesses();
 
-int main() {
+int main(int argc, char *argv[]) {
+    if (argc <= 1) {
+        logLastErrorWithMessage("Unassigned execution type argument.");
+        exit(-1);
+    }
+
+    if (strcmp(argv[1], NORMAL_EXECUTION_EXTERNAL_ARGUMENT_NAME) == 0) strcpy(executionType, NORMAL_EXECUTION);
+    if (strcmp(argv[1], ARTIFICIAL_EXECUTION_EXTERNAL_ARGUMENT_NAME) == 0) strcpy(executionType, ARTIFICIAL_EXECUTION);
+    if (strlen(executionType) == 0) {
+        logLastErrorWithMessage("Incorrect execution type argument.");
+        exit(-1);
+    }
+
     cEcuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
     velocity = 0;
     carState = CarStateNone;
@@ -110,8 +128,6 @@ int main() {
         logLastError();
         terminateProgramExecution(-1);
     }
-
-
 
 
     registerSignalHandlers();
@@ -179,7 +195,7 @@ void handleThrottleFailSignal() {
     carState = CarStateNone;
 }
 
-void handleTerminateSignal(){
+void handleTerminateSignal() {
     terminateProgramExecution(0);
 }
 
@@ -235,12 +251,11 @@ void handleStopCommandFromHmi() {
 }
 
 
-
 void runParkingSensors() {
     parkAssistPid = fork();
-    if (parkAssistPid == 0) execEcuChildProcess(PARK_ASSIST_EXE_FILENAME);
+    if (parkAssistPid == 0) execEcuChildProcessWithArgument(PARK_ASSIST_EXE_FILENAME, executionType);
     surroundViewCamerasPid = fork();
-    if (surroundViewCamerasPid == 0) execEcuChildProcess(SURROUND_VIEW_CAMERAS_EXE_FILENAME);
+    if (surroundViewCamerasPid == 0) execEcuChildProcessWithArgument(SURROUND_VIEW_CAMERAS_EXE_FILENAME, executionType);
 }
 
 void stopParkingSensors() {
@@ -256,12 +271,11 @@ void runSensors() {
     if (frontWindShieldCameraPid == 0) execEcuChildProcess(FRONT_WIND_SHIELD_CAMERA_EXE_FILENAME);
 
     forwardFacingRadarPid = fork();
-    if (forwardFacingRadarPid == 0) execEcuChildProcess(FORWARD_FACING_RADAR_EXE_FILENAME);
+    if (forwardFacingRadarPid == 0) execEcuChildProcessWithArgument(FORWARD_FACING_RADAR_EXE_FILENAME, executionType);
 }
 
 
-
-void stopSensors(){
+void stopSensors() {
     if (frontWindShieldCameraPid != 0) kill(frontWindShieldCameraPid, SIGKILL);
     if (forwardFacingRadarPid != 0) kill(forwardFacingRadarPid, SIGKILL);
     frontWindShieldCameraPid = 0;
@@ -278,13 +292,13 @@ void runActuators() {
     if (brakeByWirePid == 0) execEcuChildProcess(BRAKE_BY_WIRE_EXE_FILENAME);
 }
 
-void getCwdWithFileName(const char *fileName, char* buff, int size){
+void getCwdWithFileName(const char *fileName, char *buff, int size) {
     getcwd(buff, size);
     strcat(buff, "/");
     strcat(buff, fileName);
 }
 
-void stopActuators(){
+void stopActuators() {
     if (steerByWirePid != 0) kill(steerByWirePid, SIGKILL);
     if (throttleControlPid != 0) kill(throttleControlPid, SIGKILL);
     if (brakeByWirePid != 0) kill(brakeByWirePid, SIGKILL);
@@ -302,30 +316,31 @@ void execEcuChildProcess(const char *childName) {
     exit(-1);
 }
 
+void execEcuChildProcessWithArgument(const char *childName, const char *arg) {
+    closeFileDescriptors();
+    char buff[128];
+    getCwdWithFileName(childName, buff, sizeof(buff));
+    execl(buff, childName, arg, (char *) 0);
+    logLastError();
+    exit(-1);
+}
+
 void execEcuChildProcessWithIntArgument(const char *childName, int arg) {
     closeFileDescriptors();
     char buff[128];
     char argStr[16];
     sprintf(argStr, "%d", arg);
     getCwdWithFileName(childName, buff, sizeof(buff));
-    execl(buff, childName, argStr, (char*)0);
+    execl(buff, childName, argStr, (char *) 0);
     logLastError();
     exit(-1);
 }
-
 
 
 void initiateParking() {
     //TODO: Implement initiateParking
     carState = CarStateParking;
 }
-
-
-
-
-
-
-
 
 
 void handleFwcRequest(void *requestDataPtr, unsigned int requestDataLength) {
@@ -337,8 +352,6 @@ void handleFfrRequest(void *requestDataPtr, unsigned int requestDataLength) {
     if (carState != CarStateStarted) return;
     printf("FFR REQUEST\n");
 }
-
-
 
 
 void handlePaRequest(void *requestDataPtr, unsigned int requestDataLength) {

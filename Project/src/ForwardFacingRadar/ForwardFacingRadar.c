@@ -2,7 +2,6 @@
 #include "ForwardFacingRadar.h"
 #include "../Logger/Logger.h"
 
-#define FORWARD_RADAR_DATA_SOURCE_FILE "/dev/urandom"
 #define FORWARD_RADAR_LOGFILE "radar.log"
 #define FORWARD_RADAR_ERROR_LOGFILE "radar.eLog"
 
