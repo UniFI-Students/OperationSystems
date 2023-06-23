@@ -17,32 +17,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuBbwIpc/CentralEcuBbwIpc.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuBbwIpc/CentralEcuBbwIpc.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuHmiIpc/CentralEcuHmiIpc.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuHmiIpc/CentralEcuHmiIpc.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuSbwIpc/CentralEcuSbwIpc.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuSbwIpc/CentralEcuSbwIpc.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuTcIpc/CentralEcuTcIpc.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuTcIpc/CentralEcuTcIpc.h" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/Shared/Consts.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWireIpc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWireIpc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterfaceIpc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterfaceIpc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/InterProcessComunication/Ipc.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/InterProcessComunication/Ipc.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/InterProcessComunication/Ipc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/InterProcessComunication/Ipc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/Logger/Logger.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Logger/Logger.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWire.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWireIpc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWireIpc.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControlIpc.h" afterDir="false" />
-    </list>
+    <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -106,26 +81,26 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ATTACH_DIALOG_SELECTED_HOST&quot;: &quot;\\\\wsl$\\Ubuntu\\&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
-    &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;//wsl$/Ubuntu/usr/bin/make&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;CLionExternalConfigurable&quot;,
-    &quot;structure.view.defaults.are.configured&quot;: &quot;true&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ATTACH_DIALOG_SELECTED_HOST": "\\\\wsl$\\Ubuntu\\",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.cidr.known.project.marker": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "cf.first.check.clang-format": "false",
+    "cidr.known.project.marker": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "//wsl$/Ubuntu/usr/bin/make",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "structure.view.defaults.are.configured": "true",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
       <recent name="F:\OperationSystems\Project\src\CentralEcu\CentralEcuBbwIpc" />
@@ -216,7 +191,7 @@
       <workItem from="1687361405854" duration="11144000" />
       <workItem from="1687422321236" duration="14318000" />
       <workItem from="1687441405276" duration="11367000" />
-      <workItem from="1687523229008" duration="13033000" />
+      <workItem from="1687523229008" duration="13124000" />
     </task>
     <servers />
   </component>
