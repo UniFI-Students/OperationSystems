@@ -1,6 +1,11 @@
 #include <unistd.h>
-#include "SteerByWire.h"
+#include "SteerByWireIpc.h"
 #include "../Logger/Logger.h"
+#include "../InterProcessComunication/Ipc.h"
+#include <stdbool.h>
+#include <stdlib.h>
+#include <fcntl.h>
+#include <errno.h>
 
 #define STEERING_LEFT "STO GIRANDO A SINISTRA"
 #define STEERING_RIGHT "STO GIRANDO A DESTRA"
@@ -9,52 +14,123 @@
 #define STEER_BY_WIRE_LOGFILE "steer.log"
 #define STEER_BY_WIRE_ERROR_LOGFILE "steer.eLog"
 
-void receiveCommandFromEcu(SteerByWireCommand *steerCommandResultPointer);
+int sbwSocketFd;
+int acceptedSocketFd;
+
+bool receiveCommandFromEcu(SteerByWireCommand *pCommand);
 
 void handleSteerRightCommand();
 
-void handleNoActionCommand();
+void handleNoAction();
 
 void handleSteerLeftCommand();
 
+
+void closeFileDescriptors();
 
 int main(void) {
     SteerByWireCommand steerCommand;
 
     setLogFileName(STEER_BY_WIRE_LOGFILE);
     setErrorLogFileName(STEER_BY_WIRE_ERROR_LOGFILE);
+    instantiateLogFileDescriptor();
+    instantiateErrorLogFileDescriptor();
 
-    void (*steerHandleFuncHashMap[3])();
+    sbwSocketFd = createInetSocket(DEFAULT_PROTOCOL);
+    if (sbwSocketFd < 0) {
+        logLastError();
+        closeFileDescriptors();
+        exit(-1);
+    }
 
-    steerHandleFuncHashMap[Left % 3] = &handleSteerLeftCommand;
-    steerHandleFuncHashMap[Right % 3] = &handleSteerLeftCommand;
-    steerHandleFuncHashMap[NoAction % 3] = &handleSteerLeftCommand;
+    fcntl(sbwSocketFd, F_SETFL, fcntl(sbwSocketFd, F_GETFL, 0) | O_NONBLOCK);
 
+    if (bindLocalInetSocket(sbwSocketFd, STEER_BY_WIRE_INET_SOCKET_PORT) < 0) {
+        logLastError();
+        closeFileDescriptors();
+        exit(-1);
+    }
+    if (listenSocket(sbwSocketFd, 5) < 0) {
+        logLastError();
+        closeFileDescriptors();
+        exit(-1);
+    }
 
     while (1) {
-        receiveCommandFromEcu(&steerCommand);
+        if (receiveCommandFromEcu(&steerCommand)) {
 
-        for (int i = 0; i < 4; ++i) {
-
-            steerHandleFuncHashMap[steerCommand.type % 3]();
+            switch (steerCommand.type) {
+                case Left:
+                    handleSteerLeftCommand();
+                    break;
+                case Right:
+                    handleSteerRightCommand();
+                    break;
+            }
+        } else {
+            handleNoAction();
             sleep(1);
         }
     }
 }
 
+void closeFileDescriptors() {
+    closeSocket(acceptedSocketFd);
+    closeSocket(sbwSocketFd);
+    closeLogFileDescriptor();
+    closeErrorLogFileDescriptor();
+
+}
+
 void handleSteerLeftCommand() {
-    logMessage(STEERING_LEFT);
+    for (int i = 0; i < 4; ++i) {
+        logMessage(STEERING_LEFT);
+        sleep(1);
+    }
 }
 
 
-void handleNoActionCommand() {
-    logMessage(STEERING_RIGHT);
-}
-
-void handleSteerRightCommand() {
+void handleNoAction() {
     logMessage(NO_ACTION);
 }
 
-void receiveCommandFromEcu(SteerByWireCommand *steerCommandResultPointer) {
-//TODO: Implement receiveCommandFromEcu
+void handleSteerRightCommand() {
+    for (int i = 0; i < 4; ++i) {
+        logMessage(STEERING_RIGHT);
+        sleep(1);
+    }
+}
+
+bool receiveCommandFromEcu(SteerByWireCommand *pCommand) {
+    acceptedSocketFd = acceptInetSocket(sbwSocketFd);
+    if (acceptedSocketFd < 0){
+        errno = 0;
+        return false;
+    }
+
+    int requesterId;
+    void *requestData;
+    int requestDataLength;
+
+    if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0){
+        logLastError();
+        closeSocket(acceptedSocketFd);
+        return false;
+    }
+
+    SteerByWireCommand *cmdPtr = (SteerByWireCommand *) requestData;
+
+    switch ((SteerByWireRequester)requesterId) {
+
+        case CentralEcuToSbwRequester:
+            pCommand->type = cmdPtr->type;
+            break;
+        default:
+            logLastErrorWithMessage("Unknown request arrived.");
+            break;
+    }
+
+    free(requestData);
+    closeSocket(acceptedSocketFd);
+    return true;
 }

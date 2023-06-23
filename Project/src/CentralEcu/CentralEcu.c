@@ -8,6 +8,17 @@
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
 #include "../HumanMachineInterface/HumanMachineInterfaceIpc.h"
+#include "../BrakeByWire/BrakeByWireIpc.h"
+#include "../SteerByWire/SteerByWireIpc.h"
+
+#define HUMAN_MACHINE_INTERFACE_EXE_FILENAME "hmi"
+#define STEER_BY_WIRE_EXE_FILENAME "sbw"
+#define THROTTLE_CONTROL_EXE_FILENAME "tc"
+#define BRAKE_BY_WIRE_EXE_FILENAME "bbw"
+#define FRONT_WIND_SHIELD_CAMERA_EXE_FILENAME "fwc"
+#define FORWARD_FACING_RADAR_EXE_FILENAME "ffr"
+#define PARK_ASSIST_EXE_FILENAME "pa"
+#define SURROUND_VIEW_CAMERAS_EXE_FILENAME "svc"
 
 #define CENTRAL_ECU_LOGFILE "ECU.log"
 #define CENTRAL_ECU_ERROR_LOGFILE "ECU.eLog"
@@ -71,6 +82,10 @@ void initiateParking();
 void getCwdWithFileName(const char *fileName, char* buff, int size);
 
 void execEcuChildProcess(const char *childName);
+
+void sendBrakeRequestToBbr(int brakeQuantity);
+
+void sendSteerRequestToSbw(SteerByWireCommandType type);
 
 int main() {
     cEcuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
@@ -176,6 +191,9 @@ void handleHmiRequest(const void *requestData, int requestDataLength) {
         case Stop:
             handleStopCommandFromHmi();
             break;
+        case None:
+            logLastErrorWithMessage("Invalid hmi command type");
+            break;
     }
 
 }
@@ -233,7 +251,7 @@ void runActuators() {
     throttleControlPid = fork();
     if (throttleControlPid == 0) execEcuChildProcess(THROTTLE_CONTROL_EXE_FILENAME);
     brakeByWirePid = fork();
-    if (brakeByWirePid == 0) execEcuChildProcess(BREAK_BY_WIRE_EXE_FILENAME);
+    if (brakeByWirePid == 0) execEcuChildProcess(BRAKE_BY_WIRE_EXE_FILENAME);
 }
 
 void getCwdWithFileName(const char *fileName, char* buff, int size){
@@ -273,24 +291,67 @@ void sendStopSignalToBreakByWire() {
 }
 
 void sendMessageToHmi(char *message) {
-
     int hmiSocketFd = createInetSocket(DEFAULT_PROTOCOL);
     if (hmiSocketFd < 0) {
         logLastError();
-        closeFileDescriptors();
-        exit(-1);
+        return;
     }
     int hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
     while (hmiConnectionRes < 0) {
         logLastErrorWithMessage("Trying to connect to hmi");
         hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
-        sleep(5);
+        sleep(1);
     }
 
     if (writeRequest(hmiSocketFd, CentralEcuToHmiRequester, message, strlen(message)) < 0) {
         logLastError();
     }
     closeSocket(hmiSocketFd);
+}
+
+void sendBrakeRequestToBbr(int brakeQuantity) {
+    BrakeByWireCommand cmd;
+    cmd.type = Brake;
+    cmd.quantity = brakeQuantity;
+
+    int bbwSocket = createInetSocket(DEFAULT_PROTOCOL);
+    if (bbwSocket < 0) {
+        logLastError();
+        return;
+    }
+    int bbwConnectionRes = connectLocalInetSocket(bbwSocket, BRAKE_BY_WIRE_INET_SOCKET_PORT);
+    while (bbwConnectionRes < 0) {
+        logLastErrorWithMessage("Trying to connect to bbw");
+        bbwConnectionRes = connectLocalInetSocket(bbwSocket, BRAKE_BY_WIRE_INET_SOCKET_PORT);
+        sleep(1);
+    }
+
+    if (writeRequest(bbwSocket, CentralEcuToBbwRequester, &cmd, sizeof(cmd))) {
+        logLastError();
+    }
+    closeSocket(bbwSocket);
+}
+void sendSteerRequestToSbw(SteerByWireCommandType type){
+
+    SteerByWireCommand cmd;
+    cmd.type = type;
+
+    int swbSocket = createInetSocket(DEFAULT_PROTOCOL);
+    if (swbSocket < 0) {
+        logLastError();
+        return;
+    }
+    int sbwConnectionRes = connectLocalInetSocket(swbSocket, STEER_BY_WIRE_INET_SOCKET_PORT);
+    while (sbwConnectionRes < 0) {
+        logLastErrorWithMessage("Trying to connect to sbw");
+        sbwConnectionRes = connectLocalInetSocket(swbSocket, STEER_BY_WIRE_INET_SOCKET_PORT);
+        sleep(1);
+    }
+
+    if (writeRequest(swbSocket, CentralEcuToSbwRequester, &cmd, sizeof(cmd))) {
+        logLastError();
+    }
+    closeSocket(swbSocket);
 }
 
 void handleFwscRequest(void *pVoid, int length) {
@@ -302,6 +363,8 @@ void handleFfrRequest(void *pVoid, int length) {
     if (carState != CarStateStarted) return;
     printf("FFR REQUEST\n");
 }
+
+
 
 
 void handlePaRequest(void *pVoid, int length) {

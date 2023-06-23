@@ -7,7 +7,7 @@
 #include <sys/stat.h>
 #include "../DateProvider/DateProvider.h"
 
-#define LOG_DIRECTORY "log"
+#define LOG_DIRECTORY "logs"
 
 char logFilePath[128];
 char errorLogFilePath[128];

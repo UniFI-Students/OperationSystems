@@ -1,7 +1,6 @@
 ﻿#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "HumanMachineInterface.h"
 #include "HumanMachineInterfaceIpc.h"
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
@@ -12,6 +11,10 @@
 #define STOP "ARRESTO"
 
 #define HUMAN_MACHINE_INTERFACE_ERROR_LOGFILE "hmi.eLog"
+
+
+int hmiSocketFd;
+int acceptedSocketFd;
 
 void executeHmiReader();
 
@@ -44,28 +47,28 @@ int main(int argc, char *argv[]) {
 }
 
 void executeHmiReader() {
-    char buff[32];
     HumanMachineInterfaceCommand cmd;
-
+    char buff[32];
     while (1) {
+        memset(buff, 0, sizeof(buff));
+        cmd.type = None;
         scanf("%s", buff);
 
         if (strcmp(START, buff) == 0) cmd.type = Start;
         if (strcmp(PARKING, buff) == 0) cmd.type = Parking;
         if (strcmp(STOP, buff) == 0) cmd.type = Stop;
 
-        sendCommandToEcu(cmd);
+        if (cmd.type != None) sendCommandToEcu(cmd);
     }
 }
-
-int hmiSocketFd;
 
 
 void executeHmiWriter() {
     hmiSocketFd = createInetSocket(DEFAULT_PROTOCOL);
     if (hmiSocketFd < 0) {
         logLastError();
-        return;
+        closeFileDescriptors();
+        exit(-1);
     }
 
     if (bindLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT) < 0) {
@@ -88,6 +91,7 @@ void executeHmiWriter() {
 
 void closeFileDescriptors() {
     closeSocket(hmiSocketFd);
+    closeSocket(acceptedSocketFd);
     closeErrorLogFileDescriptor();
 }
 
@@ -111,13 +115,22 @@ void sendCommandToEcu(HumanMachineInterfaceCommand command) {
 }
 
 void receiveMessageFromEcu(char *message) {
-    int acceptedSocket = acceptInetSocket(hmiSocketFd);
+    acceptedSocketFd = acceptInetSocket(hmiSocketFd);
+
+    if (acceptedSocketFd < 0){
+        logLastError();
+        return;
+    }
 
     int requesterId;
     void *requestData;
     int requestDataLength;
 
-    if (readRequest(acceptedSocket, &requesterId, &requestData, &requestDataLength) < 0) logLastError();
+    if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0) {
+        logLastError();
+        closeSocket(acceptedSocketFd);
+        return;
+    }
     switch ((HmiRequester) requesterId) {
         case CentralEcuToHmiRequester:
             strcpy(message, requestData);
@@ -127,7 +140,7 @@ void receiveMessageFromEcu(char *message) {
             break;
     }
     free(requestData);
-    closeSocket(acceptedSocket);
+    closeSocket(acceptedSocketFd);
 }
 
 
