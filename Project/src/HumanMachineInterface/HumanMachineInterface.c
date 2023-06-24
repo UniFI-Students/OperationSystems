@@ -110,7 +110,8 @@ void sendCommandToEcu(HumanMachineInterfaceCommand command) {
     }
     if (writeRequest(ecuSocketFd, HumanMachineInterfaceToCentralEcuRequester, &command, sizeof(command)) < 0) {
         logLastError();
-        exit(-1);
+        closeSocket(ecuSocketFd);
+        return;
     }
     if (closeSocket(ecuSocketFd) < 0) logLastError();
 }

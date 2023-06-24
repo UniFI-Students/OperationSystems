@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+#include <fcntl.h>
 #include "CentralEcuIpc.h"
 #include "CentralEcuBbwIpc/CentralEcuBbwIpc.h"
 #include "CentralEcuHmiIpc/CentralEcuHmiIpc.h"
@@ -13,6 +15,7 @@
 #include "../InterProcessComunication/Ipc.h"
 #include "../HumanMachineInterface/HumanMachineInterfaceIpc.h"
 #include "../Shared/Consts.h"
+#include "../FilePathProvider/FilePathProvider.h"
 
 #define CENTRAL_ECU_LOGFILE "ECU.log"
 #define CENTRAL_ECU_ERROR_LOGFILE "ECU.eLog"
@@ -37,17 +40,22 @@ int forwardFacingRadarPid;
 int parkAssistPid;
 int surroundViewCamerasPid;
 
-int velocity;
+int centralEcuSpeedCorrectorPid;
+
+int speed;
+int desiredSpeed;
 CarState carState;
 
 char executionType[3];
+
+int pipeBetweenCEcuSpeedCorrectorAndCEcu[2];
 
 
 void registerSignalHandlers();
 
 void handleThrottleFailSignal();
 
-void handleTerminateSignal();
+void handleInterruptSignal();
 
 void terminateProgramExecution(int status);
 
@@ -81,9 +89,8 @@ void runParkingSensors();
 void stopParkingSensors();
 
 
-void initiateParking();
+void parkCar();
 
-void getCwdWithFileName(const char *fileName, char *buff, int size);
 
 void execEcuChildProcess(const char *childName);
 
@@ -93,6 +100,16 @@ void execEcuChildProcessWithArgument(const char *childName, const char *arg);
 
 
 void closeChildProcesses();
+
+void adjustSpeedToDesiredSpeed();
+
+void handleFwcIntegerData(int data);
+
+void stopCar();
+
+void steer(enum SteerByWireCommandType type);
+
+void handleAlarmSignal();
 
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
@@ -107,8 +124,13 @@ int main(int argc, char *argv[]) {
         exit(-1);
     }
 
+    acceptedSocket = -1;
+    cEcuSocketFd = -1;
+    pipeBetweenCEcuSpeedCorrectorAndCEcu[READ_PIPE] = -1;
+    pipeBetweenCEcuSpeedCorrectorAndCEcu[WRITE_PIPE] = -1;
+
     cEcuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
-    velocity = 0;
+    speed = 0;
     carState = CarStateNone;
 
     setLogFileName(CENTRAL_ECU_LOGFILE);
@@ -131,6 +153,7 @@ int main(int argc, char *argv[]) {
 
 
     registerSignalHandlers();
+    alarm(1);
 
     while (1) {
         acceptedSocket = acceptInetSocket(cEcuSocketFd);
@@ -183,11 +206,14 @@ void closeFileDescriptors() {
 void registerSignalHandlers() {
     signal(SIGCHLD, SIG_IGN);
     signal(SIG_THROTTLE_FAIL, handleThrottleFailSignal);
-    signal(SIGTERM, handleTerminateSignal);
+    signal(SIGINT, handleInterruptSignal);
+    signal(SIGALRM, handleAlarmSignal);
 }
 
+
+
 void handleThrottleFailSignal() {
-    velocity = 0;
+    speed = 0;
     sendMessageToHmi("Throttle failed. Terminating current execution.");
     stopSensors();
     stopParkingSensors();
@@ -195,8 +221,16 @@ void handleThrottleFailSignal() {
     carState = CarStateNone;
 }
 
-void handleTerminateSignal() {
+void handleInterruptSignal() {
     terminateProgramExecution(0);
+}
+
+void handleAlarmSignal() {
+    if (pipeBetweenCEcuSpeedCorrectorAndCEcu[READ_PIPE] >= 0){
+        read(pipeBetweenCEcuSpeedCorrectorAndCEcu[READ_PIPE], &speed, sizeof(speed));
+    }
+    if (speed != desiredSpeed) adjustSpeedToDesiredSpeed();
+    alarm(1);
 }
 
 void terminateProgramExecution(int status) {
@@ -240,14 +274,19 @@ void handleStartCommandFromHmi() {
 
 void handleParkingCommandFromHmi() {
     if (carState != CarStateStarted) return;
-    initiateParking();
+    parkCar();
 
 }
 
 void handleStopCommandFromHmi() {
     if (carState != CarStateStarted) return;
-    velocity = 0;
+    stopCar();
+}
+
+void stopCar() {
+    speed = 0;
     sendStopSignalToBbw(brakeByWirePid);
+    sendMessageToHmi("Sending stop signal to brake-by-wire.");
 }
 
 
@@ -292,11 +331,6 @@ void runActuators() {
     if (brakeByWirePid == 0) execEcuChildProcess(BRAKE_BY_WIRE_EXE_FILENAME);
 }
 
-void getCwdWithFileName(const char *fileName, char *buff, int size) {
-    getcwd(buff, size);
-    strcat(buff, "/");
-    strcat(buff, fileName);
-}
 
 void stopActuators() {
     if (steerByWirePid != 0) kill(steerByWirePid, SIGKILL);
@@ -337,20 +371,112 @@ void execEcuChildProcessWithIntArgument(const char *childName, int arg) {
 }
 
 
-void initiateParking() {
-    //TODO: Implement initiateParking
+void parkCar() {
+    //TODO: Implement parkCar
     carState = CarStateParking;
+    printf("PARKING CAR");
 }
 
 
 void handleFwcRequest(void *requestDataPtr, unsigned int requestDataLength) {
     if (carState != CarStateStarted) return;
-    printf("FWSC REQUEST\n");
+
+    if (strcmp(requestDataPtr, FWC_STEER_LEFT_MESSAGE) == 0) {
+        steer(Left);
+        return;
+    }
+
+    if (strcmp(requestDataPtr, FWC_STEER_RIGHT_MESSAGE) == 0) {
+        steer(Right);
+        return;
+    }
+
+    if (strcmp(requestDataPtr, FWC_DANGER_MESSAGE) == 0) {
+        stopCar();
+        return;
+    }
+
+    if (strcmp(requestDataPtr, FWC_PARK_CAR_MESSAGE) == 0) {
+        parkCar();
+        return;
+    }
+
+    errno = 0;
+    int integerFromRequest = (int) strtol(requestDataPtr, requestDataPtr + requestDataLength, 10);
+    if (errno == 0) {
+        handleFwcIntegerData(integerFromRequest);
+        return;
+    }
+    errno = 0;
+    logLastErrorWithMessage("Incorrect request from fwc.");
+}
+
+void steer(SteerByWireCommandType type) {
+    sendSteerRequestToSbw(type);
+    sendMessageToHmi("Sending steer right request to sbw.");
+
+}
+
+void handleFwcIntegerData(int data) {
+    if (desiredSpeed != data) {
+        desiredSpeed = data;
+    }
+}
+
+void adjustSpeedToDesiredSpeed() {
+    if (centralEcuSpeedCorrectorPid != 0) {
+        kill(centralEcuSpeedCorrectorPid, SIGKILL);
+        centralEcuSpeedCorrectorPid = 0;
+        close(pipeBetweenCEcuSpeedCorrectorAndCEcu[READ_PIPE]);
+        close(pipeBetweenCEcuSpeedCorrectorAndCEcu[WRITE_PIPE]);
+        pipeBetweenCEcuSpeedCorrectorAndCEcu[READ_PIPE] = -1;
+        pipeBetweenCEcuSpeedCorrectorAndCEcu[WRITE_PIPE] = -1;
+    }
+
+    pipe(pipeBetweenCEcuSpeedCorrectorAndCEcu);
+
+    centralEcuSpeedCorrectorPid = fork();
+    if (centralEcuSpeedCorrectorPid == 0) {
+        close(pipeBetweenCEcuSpeedCorrectorAndCEcu[READ_PIPE]);
+        pipeBetweenCEcuSpeedCorrectorAndCEcu[READ_PIPE] = -1;
+        closeSocket(acceptedSocket);
+        acceptedSocket = -1;
+        closeSocket(cEcuSocketFd);
+        cEcuSocketFd = -1;
+
+        while (speed < desiredSpeed) {
+            int throttleValue = DEFAULT_THROTTLE_QUANTITY;
+            if (speed + throttleValue > desiredSpeed) throttleValue = desiredSpeed - speed;
+            speed += throttleValue;
+
+            write(pipeBetweenCEcuSpeedCorrectorAndCEcu[WRITE_PIPE], &speed, sizeof(speed));
+            sendThrottleRequestToTc(throttleValue);
+            sendMessageToHmi("Sending throttle request to tc.");
+            sleep(1);
+        }
+
+        while (speed > desiredSpeed) {
+            int brakeValue = DEFAULT_BRAKE_QUANTITY;
+            if (speed - brakeValue < desiredSpeed) brakeValue = speed - desiredSpeed;
+            speed -= brakeValue;
+
+            write(pipeBetweenCEcuSpeedCorrectorAndCEcu[WRITE_PIPE], &speed, sizeof(speed));
+            sendBrakeRequestToBbw(brakeValue);
+            sendMessageToHmi("Sending brake request to bbw.");
+            sleep(1);
+        }
+
+        closeFileDescriptors();
+        exit(0);
+    }
+    close(pipeBetweenCEcuSpeedCorrectorAndCEcu[WRITE_PIPE]);
+    pipeBetweenCEcuSpeedCorrectorAndCEcu[WRITE_PIPE] = -1;
+
+    fcntl( pipeBetweenCEcuSpeedCorrectorAndCEcu[READ_PIPE], F_SETFL, fcntl(pipeBetweenCEcuSpeedCorrectorAndCEcu[READ_PIPE], F_GETFL) | O_NONBLOCK);
 }
 
 void handleFfrRequest(void *requestDataPtr, unsigned int requestDataLength) {
     if (carState != CarStateStarted) return;
-    printf("FFR REQUEST\n");
 }
 
 

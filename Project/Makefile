@@ -31,29 +31,36 @@ BBW_OBJ_FILES = build/BrakeByWire.o 			\
 
 #FRONT WIND SHIELD CAMERA
 FWC_OBJ_FILES = build/FrontWindshieldCamera.o	\
+				build/Ipc.o						\
  				build/Logger.o 					\
- 				build/DateProvider.o
+ 				build/DateProvider.o			\
+				build/FilePathProvider.o
 
 #FORWARD FACING RADAR
 FFR_OBJ_FILES = build/ForwardFacingRadar.o 		\
+				build/Ipc.o						\
 				build/Logger.o 					\
-				build/DateProvider.o
+				build/DateProvider.o			\
+				build/FilePathProvider.o
 
 #PARK ASSIST
 PA_OBJ_FILES = build/ParkAssist.o 				\
 				build/Logger.o 					\
-				build/DateProvider.o
+				build/DateProvider.o			\
+				build/FilePathProvider.o
 
 #SURROUND VIEW CAMERAS
 SVC_OBJ_FILES = build/SurroundViewCameras.o 	\
 				build/Logger.o 					\
-				build/DateProvider.o
+				build/DateProvider.o			\
+				build/FilePathProvider.o
 
 #CENTRAL ECU
 ECU_OBJ_FILES = build/CentralEcu.o 				\
 				build/Ipc.o 					\
 				build/Logger.o 					\
 				build/DateProvider.o			\
+				build/FilePathProvider.o		\
 				build/CentralEcuHmiIpc.o		\
 				build/CentralEcuBbwIpc.o		\
 				build/CentralEcuSbwIpc.o		\
@@ -73,6 +80,7 @@ all: buildFileObjects buildApp
 
 buildApp: $(HMI_OBJ_FILES)
 	$(AT) mkdir -p app
+
 	$(CC) $(HMI_OBJ_FILES)  -o app/hmi $(CFLAGS)
 	$(CC) $(SBW_OBJ_FILES)  -o app/sbw $(CFLAGS)
 	$(CC) $(TC_OBJ_FILES)  -o app/tc $(CFLAGS)
@@ -82,6 +90,9 @@ buildApp: $(HMI_OBJ_FILES)
 	$(CC) $(PA_OBJ_FILES)  -o app/pa $(CFLAGS)
 	$(CC) $(SVC_OBJ_FILES)  -o app/svc $(CFLAGS)
 	$(CC) $(ECU_OBJ_FILES)  -o app/ecu $(CFLAGS)
+
+	$(AT) cp src/frontCamera.data app/frontCamera.data
+	$(AT) cp src/urandomARTIFICIALE.binary app/urandomARTIFICIALE.binary
 
 buildFileObjects: $(C_FILES)
 	$(AT) mkdir -p build

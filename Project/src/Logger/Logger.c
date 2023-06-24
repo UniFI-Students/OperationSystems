@@ -83,7 +83,7 @@ void logLastErrorWithMessage(const char *message){
 void createDirectoryIfDoesNotExist(const char* path) {
     struct stat dirStat;
     if (stat(path, &dirStat) < 0) {
-        if (mkdir(path, 0666) != 0) perror(strerror(errno));
+        if (mkdir(path, S_IRWXO | S_IRWXG | S_IRWXU) != 0) perror(strerror(errno));
     }
 
 }
