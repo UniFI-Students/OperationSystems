@@ -10,6 +10,7 @@
 #include "../FilePathProvider/FilePathProvider.h"
 #include "../InterProcessComunication/Ipc.h"
 #include "../ParkAssist/ParkAssistIpc.h"
+#include "../Shared/Utils.h"
 
 
 #define SURROUND_CAMERAS_LOGFILE "cameras.log"
@@ -23,8 +24,6 @@ int readBytes(char *buffer, unsigned int nBytes);
 void sendBytesToParkAssist(const char *bytes, unsigned int nBytes);
 
 void closeFileDescriptors();
-
-void convertBytesToStringRepresentation(char *dest, const char *source, unsigned int size);
 
 void handleInterruptSignal();
 
@@ -85,15 +84,6 @@ int main(int argc, char *argv[]) {
 void handleInterruptSignal() {
     closeFileDescriptors();
     exit(0);
-}
-
-void convertBytesToStringRepresentation(char *dest, const char *source, unsigned int size) {
-    char convertedValueToHexString[16];
-    for (int i = 0; i < 8; ++i) {
-        sprintf(convertedValueToHexString, "| 0x%.8X ", source[0]);
-        strcat(dest, convertedValueToHexString);
-    }
-    strcat(dest, "|");
 }
 
 void closeFileDescriptors() {

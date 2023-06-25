@@ -15,7 +15,7 @@ int sendDataToEcu(CentralEcuRequester requester, const void *data, unsigned int 
         closeSocket(ecuSocketFd);
         return -1;
     }
-    if (writeRequest(ecuSocketFd, ForwardFacingRadarToCentralEcuRequester, data, dataLength) < 0) {
+    if (writeRequest(ecuSocketFd, requester, data, dataLength) < 0) {
         logLastErrorWithWhenMessage("writing a request to the ecu");
         closeSocket(ecuSocketFd);
         return -1;

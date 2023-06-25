@@ -10,6 +10,7 @@
 #include "../Shared/Consts.h"
 #include "../InterProcessComunication/Ipc.h"
 #include "../CentralEcu/CentralEcuIpc.h"
+#include "../Shared/Utils.h"
 
 #define PARK_ASSIST_LOGFILE "assist.log"
 #define PARK_ASSIST_ERROR_LOGFILE "assist.eLog"
@@ -30,13 +31,10 @@ int receiveParkCommandFromEcu();
 
 int receive8BytesFromSurroundViewCameras(char buffer[8]);
 
-void sendBytesToEcu(const char *bytes, unsigned int nBytes);
-
 int readBytes(char *buffer, unsigned int nBytes);
 
 void closeFileDescriptors();
 
-void convertBytesToStringRepresentation(char *dest, const char *source, unsigned int size);
 
 void execEcuChildProcessWithArgument(const char *childName, const char *arg);
 
@@ -109,12 +107,12 @@ int main(int argc, char *argv[]) {
         runSurroundViewCameras();
         for (int i = 0; i < 30; ++i) {
             if (receive8BytesFromSurroundViewCameras(buffer) >= 0) {
-                sendBytesToEcu(buffer, 8);
+                sendDataToEcu(ParkAssistToCentralEcuRequester, buffer, 8);
             }
             if (readBytes(buffer, 8) == 8) {
                 char logString[128];
                 memset(logString, 0, sizeof(logString));
-                sendBytesToEcu(buffer, 8);
+                sendDataToEcu(ParkAssistToCentralEcuRequester, buffer, 8);
                 convertBytesToStringRepresentation(logString, buffer, 8);
                 logMessage(logString);
             }
@@ -129,8 +127,7 @@ void registerSignalHandlers() {
     signal(SIGINT, handleInterruptSignal);
 }
 
-void handleInterruptSignal()
-{
+void handleInterruptSignal() {
     closeFileDescriptors();
     stopSurroundViewCameras();
     exit(0);
@@ -154,34 +151,6 @@ void execEcuChildProcessWithArgument(const char *childName, const char *arg) {
     execl(buff, childName, arg, (char *) 0);
     logLastError();
     exit(-1);
-}
-
-void sendBytesToEcu(const char *bytes, unsigned int nBytes) {
-    int ecuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
-    if (ecuSocketFd < 0) {
-        logLastError();
-        return;
-    }
-    if (connectLocalInetSocket(ecuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
-        logLastErrorWithWhenMessage("Could not establish connection to CentralEcu");
-        closeSocket(ecuSocketFd);
-        return;
-    }
-    if (writeRequest(ecuSocketFd, ParkAssistToCentralEcuRequester, bytes, nBytes) < 0) {
-        logLastError();
-        closeSocket(ecuSocketFd);
-        return;
-    }
-    if (closeSocket(ecuSocketFd) < 0) logLastError();
-}
-
-void convertBytesToStringRepresentation(char *dest, const char *source, unsigned int size) {
-    char convertedValueToHexString[16];
-    for (int i = 0; i < 8; ++i) {
-        sprintf(convertedValueToHexString, "| 0x%.8X ", source[0]);
-        strcat(dest, convertedValueToHexString);
-    }
-    strcat(dest, "|");
 }
 
 void closeFileDescriptors() {

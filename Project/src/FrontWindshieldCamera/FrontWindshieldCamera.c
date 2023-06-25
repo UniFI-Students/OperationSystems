@@ -14,17 +14,16 @@
 #define FRONT_CAMERA_LOGFILE "camera.log"
 #define FRONT_CAMERA_ERROR_LOGFILE "camera.eLog"
 
-FILE* dataSourceFilePtr;
+FILE *dataSourceFilePtr;
 char dataSourceFilePath[128];
 
 void readDataFromSourceFile(char *dataBuff);
-void sendDataToEcu(const char* message);
+
 void closeFileDescriptors();
 
 void handleInterruptSignal();
 
-int main()
-{
+int main() {
     signal(SIGINT, handleInterruptSignal);
     char buff[64];
     getCwdWithFileName(FRONT_CAMERA_DATA_SOURCE_FILE, dataSourceFilePath, sizeof(dataSourceFilePath));
@@ -36,10 +35,9 @@ int main()
     instantiateErrorLogFileDescriptor();
     dataSourceFilePtr = fopen(dataSourceFilePath, "r");
 
-    while(!feof(dataSourceFilePtr))
-    {
+    while (!feof(dataSourceFilePtr)) {
         readDataFromSourceFile(buff);
-        sendDataToEcu(buff);
+        sendDataToEcu(FrontWindShieldCameraToCentralEcuRequester, buff, strlen(buff));
         logMessage(buff);
         sleep(1);
     }
@@ -57,26 +55,6 @@ void closeFileDescriptors() {
     closeErrorLogFileDescriptor();
 }
 
-void sendDataToEcu(const char* message) {
-    int ecuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
-    if (ecuSocketFd < 0) {
-        logLastError();
-        return;
-    }
-    if (connectLocalInetSocket(ecuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
-        logLastErrorWithWhenMessage("Could not establish connection to CentralEcu");
-        closeSocket(ecuSocketFd);
-        return;
-    }
-    if (writeRequest(ecuSocketFd, FrontWindShieldCameraToCentralEcuRequester, message, strlen(message)) < 0) {
-        logLastError();
-        closeSocket(ecuSocketFd);
-        return;
-    }
-    if (closeSocket(ecuSocketFd) < 0) logLastError();
-}
-
-void readDataFromSourceFile(char *dataBuff)
-{
+void readDataFromSourceFile(char *dataBuff) {
     fscanf(dataSourceFilePtr, "%s\n", dataBuff);
 }

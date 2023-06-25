@@ -44,6 +44,7 @@ FWC_OBJ_FILES = build/FrontWindshieldCamera.o	\
 
 #FORWARD FACING RADAR
 FFR_OBJ_FILES = build/ForwardFacingRadar.o 		\
+				build/Ipc.o						\
 				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o			\
