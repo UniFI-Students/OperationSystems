@@ -27,8 +27,10 @@ void closeFileDescriptors();
 
 void convertToStringRepresentation(char *dest, const char *source, unsigned int size);
 
+void handleInterruptSignal();
+
 int main(int argc, char *argv[]) {
-    signal(SIGINT, closeFileDescriptors);
+    signal(SIGINT, handleInterruptSignal);
 
     char buffer[8];
 
@@ -75,6 +77,11 @@ int main(int argc, char *argv[]) {
         }
         sleep(1);
     }
+}
+
+void handleInterruptSignal() {
+    closeFileDescriptors();
+    exit(0);
 }
 
 void convertToStringRepresentation(char *dest, const char *source, unsigned int size) {

@@ -27,6 +27,8 @@ void handleStopSignal();
 void registerSignalHandlers();
 void closeFileDescriptors();
 
+void handleInterruptSignal();
+
 int main(){
     BrakeByWireCommand cmd;
     setLogFileName(BREAK_BY_WIRE_LOGFILE);
@@ -62,7 +64,12 @@ int main(){
 
 void registerSignalHandlers() {
     signal(SIG_STOP_CAR, handleStopSignal);
-    signal(SIGINT, closeFileDescriptors);
+    signal(SIGINT, handleInterruptSignal);
+}
+
+void handleInterruptSignal() {
+    closeFileDescriptors();
+    exit(0);
 }
 
 void closeFileDescriptors(){

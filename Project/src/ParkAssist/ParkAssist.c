@@ -133,6 +133,7 @@ void handleInterruptSignal()
 {
     closeFileDescriptors();
     stopSurroundViewCameras();
+    exit(0);
 }
 
 

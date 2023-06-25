@@ -32,12 +32,14 @@ void signalAboutFailedThrottleCommandToEcu();
 
 void closeFileDescriptors();
 
+void handleInterruptSignal();
+
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
         logLastErrorWithMessage("Unassigned argument for central ecu pid.");
         exit(-1);
     }
-    signal(SIGINT, closeFileDescriptors);
+    signal(SIGINT, handleInterruptSignal);
     cEcuPid = atoi(argv[1]);
 
     startRand(time(NULL));
@@ -73,6 +75,11 @@ int main(int argc, char *argv[]) {
     }
 }
 
+void handleInterruptSignal() {
+    closeFileDescriptors();
+    exit(0);
+}
+
 void closeFileDescriptors() {
     closeSocket(tcSocketFd);
     closeSocket(acceptedSocketFd);
@@ -82,7 +89,8 @@ void closeFileDescriptors() {
 
 
 bool isThrottleFailed() {
-    return randDouble(0, 1) < FAIL_PROBABILITY;
+    if (randDouble(0, 1) < FAIL_PROBABILITY) return true;
+    return false;
 }
 
 void receiveCommandFromEcu(ThrottleControlCommand *pCommand) {

@@ -30,8 +30,10 @@ void handleSteerLeftCommand();
 
 void closeFileDescriptors();
 
+void handleInterruptSignal();
+
 int main(void) {
-    signal(SIGINT, closeFileDescriptors);
+    signal(SIGINT, handleInterruptSignal);
     SteerByWireCommand steerCommand;
 
     setLogFileName(STEER_BY_WIRE_LOGFILE);
@@ -75,6 +77,12 @@ int main(void) {
             sleep(1);
         }
     }
+}
+
+void handleInterruptSignal() {
+    closeFileDescriptors();
+    exit(0);
+
 }
 
 void closeFileDescriptors() {

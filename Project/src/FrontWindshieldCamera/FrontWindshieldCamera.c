@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <signal.h>
+#include <stdlib.h>
 #include "FrontWindshieldCamera.h"
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
@@ -20,10 +21,11 @@ void readDataFromSourceFile(char *dataBuff);
 void sendDataToEcu(const char* message);
 void closeFileDescriptors();
 
+void handleInterruptSignal();
+
 int main()
 {
-
-    signal(SIGINT, closeFileDescriptors);
+    signal(SIGINT, handleInterruptSignal);
     char buff[64];
     getCwdWithFileName(FRONT_CAMERA_DATA_SOURCE_FILE, dataSourceFilePath, sizeof(dataSourceFilePath));
 
@@ -42,6 +44,11 @@ int main()
         sleep(1);
     }
     closeFileDescriptors();
+}
+
+void handleInterruptSignal() {
+    closeFileDescriptors();
+    exit(0);
 }
 
 void closeFileDescriptors() {

@@ -26,9 +26,10 @@ void closeFileDescriptors();
 
 void convertToStringRepresentation(char *dest, const char *source, unsigned int size);
 
-int main(int argc, char *argv[]) {
+void handleInterruptSignal();
 
-    signal(SIGINT, closeFileDescriptors);
+int main(int argc, char *argv[]) {
+    signal(SIGINT, handleInterruptSignal);
     char buffer[8];
 
     setLogFileName(SURROUND_CAMERAS_LOGFILE);
@@ -79,6 +80,11 @@ int main(int argc, char *argv[]) {
         }
         sleep(1);
     }
+}
+
+void handleInterruptSignal() {
+    closeFileDescriptors();
+    exit(0);
 }
 
 void convertToStringRepresentation(char *dest, const char *source, unsigned int size) {

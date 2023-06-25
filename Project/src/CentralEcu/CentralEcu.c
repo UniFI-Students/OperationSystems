@@ -246,8 +246,7 @@ void handleAlarmSignal() {
                 reParkCar();
                 return;
             }
-            sendMessageToHmi("CAR IS PARKED");
-            //handleSuccessfulParking();
+            handleSuccessfulParking();
         }
     }
     alarm(1);
@@ -305,6 +304,7 @@ void handleParkingCommandFromHmi() {
 
 void handleStopCommandFromHmi() {
     if (carState != CarStateStarted) return;
+    sendMessageToHmi("Sending stop signal to brake-by-wire.");
     stopCar();
 }
 
@@ -312,7 +312,6 @@ void stopCar() {
     speed = 0;
     desiredSpeed = 0;
     sendStopSignalToBbw(brakeByWirePid);
-    sendMessageToHmi("Sending stop signal to brake-by-wire.");
 }
 
 
@@ -404,16 +403,19 @@ void handleFwcRequest(void *requestDataPtr, unsigned int requestDataLength) {
     if (carState != CarStateStarted) return;
 
     if (strcmp(requestDataPtr, FWC_STEER_LEFT_MESSAGE) == 0) {
+        sendMessageToHmi("Sending steer left request to sbw.");
         steer(Left);
         return;
     }
 
     if (strcmp(requestDataPtr, FWC_STEER_RIGHT_MESSAGE) == 0) {
+        sendMessageToHmi("Sending steer right request to sbw.");
         steer(Right);
         return;
     }
 
     if (strcmp(requestDataPtr, FWC_DANGER_MESSAGE) == 0) {
+        sendMessageToHmi("Sending stop signal to brake-by-wire.");
         stopCar();
         return;
     }
@@ -435,7 +437,6 @@ void handleFwcRequest(void *requestDataPtr, unsigned int requestDataLength) {
 
 void steer(SteerByWireCommandType type) {
     sendSteerRequestToSbw(type);
-    sendMessageToHmi("Sending steer right request to sbw.");
 
 }
 
@@ -475,7 +476,7 @@ void parkCar() {
     stopActuators();
 
 
-    remainingSecondsForParkAssist = 2;
+    remainingSecondsForParkAssist = TIME_NEEDED_TO_PARK;
     hasReceivedBadValue = false;
     carState = CarStateParking;
     activateParkAssist();
@@ -483,7 +484,7 @@ void parkCar() {
 }
 
 void reParkCar() {
-    remainingSecondsForParkAssist = 2;
+    remainingSecondsForParkAssist = TIME_NEEDED_TO_PARK;
     hasReceivedBadValue = false;
     carState = CarStateParking;
     activateParkAssist();
