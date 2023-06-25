@@ -235,10 +235,6 @@ void handleInterruptSignal() {
 }
 
 void handleAlarmSignal() {
-    if (carState == CarStatePreparingToPark && speed == 0) {
-        parkCar();
-    }
-    if (carState & (CarStateStarted | CarStatePreparingToPark)) adjustSpeedToDesiredSpeed();
     if (remainingSecondsForParkAssist > 0) {
         --remainingSecondsForParkAssist;
         if (remainingSecondsForParkAssist == 0) {
@@ -249,6 +245,11 @@ void handleAlarmSignal() {
             handleSuccessfulParking();
         }
     }
+    if (carState == CarStatePreparingToPark && speed == 0) {
+        parkCar();
+    }
+    if (carState & (CarStateStarted | CarStatePreparingToPark)) adjustSpeedToDesiredSpeed();
+
     alarm(1);
 }
 

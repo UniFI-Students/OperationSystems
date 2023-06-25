@@ -9,7 +9,8 @@ HMI_OBJ_FILES = build/HumanMachineInterface.o 	\
 				build/Ipc.o						\
 				build/Utils.o					\
 				build/Logger.o 					\
-				build/DateProvider.o
+				build/DateProvider.o			\
+				build/CentralEcuIpc.o
 
 #STEER BY WIRE
 SBW_OBJ_FILES =	build/SteerByWire.o 			\
