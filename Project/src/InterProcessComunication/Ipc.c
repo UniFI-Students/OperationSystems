@@ -8,8 +8,21 @@
 
 
 
+struct sockaddr_in clientInetSocketAddress;
+struct sockaddr *clientInetSocketAddrPtr = (struct sockaddr *) &clientInetSocketAddress;
+socklen_t clientInetSocketLen = sizeof(clientInetSocketAddress);
 
+struct sockaddr_un clientUnixSocketAddress;
+struct sockaddr *clientUnixSocketAddrPtr = (struct sockaddr *) &clientUnixSocketAddress;
+socklen_t clientUnixSocketLen = sizeof(clientUnixSocketAddress);
 
+struct sockaddr_un serverUnixSocketAddress;
+struct sockaddr *serverUnixSocketAddrPtr = (struct sockaddr *) &serverUnixSocketAddress;
+socklen_t serverUnixSocketLen = sizeof(serverUnixSocketAddress);
+
+struct sockaddr_in serverInetSocketAddress;
+struct sockaddr *serverInetSocketAddrPtr = (struct sockaddr *) &serverInetSocketAddress;
+socklen_t serverInetSocketLen = sizeof(serverInetSocketAddress);
 
 
 int createUnixSocket(int protocol) {
@@ -22,9 +35,6 @@ int createInetSocket(int protocol) {
 
 int bindUnixSocket(int socketFd, const char *addressName) {
 
-    struct sockaddr_un serverUnixSocketAddress;
-    struct sockaddr *serverUnixSocketAddrPtr = (struct sockaddr *) &serverUnixSocketAddress;
-    socklen_t serverUnixSocketLen = sizeof(serverUnixSocketAddress);
 
     serverUnixSocketAddress.sun_family = AF_UNIX;
     strcpy(serverUnixSocketAddress.sun_path, addressName);
@@ -33,9 +43,6 @@ int bindUnixSocket(int socketFd, const char *addressName) {
 }
 
 int bindLocalInetSocket(int socketFd, int port){
-    struct sockaddr_in serverInetSocketAddress;
-    struct sockaddr *serverInetSocketAddrPtr = (struct sockaddr *) &serverInetSocketAddress;
-    socklen_t serverInetSocketLen = sizeof(serverInetSocketAddress);
 
     serverInetSocketAddress.sin_family = AF_INET;
     serverInetSocketAddress.sin_port = htons(port);
@@ -44,32 +51,23 @@ int bindLocalInetSocket(int socketFd, int port){
 }
 
 int closeSocket(int socketFd){
-    close(socketFd);
+    return close(socketFd);
 }
 int listenSocket(int socketFd, int queueLength) {
     return listen(socketFd, queueLength);
 }
 
 int acceptUnixSocket(int socketFd) {
-    struct sockaddr_un clientUnixSocketAddress;
-    struct sockaddr *clientUnixSocketAddrPtr = (struct sockaddr *) &clientUnixSocketAddress;
-    socklen_t clientUnixSocketLen = sizeof(clientUnixSocketAddress);
 
     return accept(socketFd, clientUnixSocketAddrPtr, &clientUnixSocketLen);
 }
 
 int acceptInetSocket(int socketFd){
-    struct sockaddr_in clientInetSocketAddress;
-    struct sockaddr *clientInetSocketAddrPtr = (struct sockaddr *) &clientInetSocketAddress;
-    socklen_t clientInetSocketLen = sizeof(clientInetSocketAddress);
 
     return accept(socketFd, clientInetSocketAddrPtr, &clientInetSocketLen);
 }
 
 int connectUnixSocket(int socketFd, const char *addressName) {
-    struct sockaddr_un serverUnixSocketAddress;
-    struct sockaddr *serverUnixSocketAddrPtr = (struct sockaddr *) &serverUnixSocketAddress;
-    socklen_t serverUnixSocketLen = sizeof(serverUnixSocketAddress);
 
     serverUnixSocketAddress.sun_family = AF_UNIX;
     strcpy(serverUnixSocketAddress.sun_path, addressName);
@@ -78,9 +76,6 @@ int connectUnixSocket(int socketFd, const char *addressName) {
 }
 
 int connectLocalInetSocket(int socketFd, int port){
-    struct sockaddr_in serverInetSocketAddress;
-    struct sockaddr *serverInetSocketAddrPtr = (struct sockaddr *) &serverInetSocketAddress;
-    socklen_t serverInetSocketLen = sizeof(serverInetSocketAddress);
 
     serverInetSocketAddress.sin_family = AF_INET;
     serverInetSocketAddress.sin_port = htons(port);
@@ -93,7 +88,7 @@ int readRequest(int fd, int *requesterId, void **requestData, unsigned int *requ
     read(fd, requestDataLengthInBytes, sizeof(int));
 
     *requestData = calloc(*requestDataLengthInBytes, 1);
-    int bytesToRead = *requestDataLengthInBytes;
+    unsigned int bytesToRead = *requestDataLengthInBytes;
     while (bytesToRead != 0) {
         int bytesRead = (int) read(fd, *requestData, bytesToRead);
         *requestData += bytesRead;
