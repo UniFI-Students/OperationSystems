@@ -254,7 +254,7 @@ void closeChildProcesses() {
 }
 
 void handleHmiRequest(const void *requestDataPtr, unsigned int requestDataLength) {
-    if (carState == CarStateStarted || carState == CarStatePreparingToPark) return;
+    if (carState == CarStateParking || carState == CarStatePreparingToPark) return;
     HumanMachineInterfaceCommand *cmdPtr = (HumanMachineInterfaceCommand *) requestDataPtr;
     switch (cmdPtr->type) {
 
