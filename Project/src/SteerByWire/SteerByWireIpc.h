@@ -1,10 +1,7 @@
-#ifndef STEER_BY_WIRE_H
-#define STEER_BY_WIRE_H
+#ifndef STEER_BY_WIRE_IPC_H
+#define STEER_BY_WIRE_IPC_H
 
-
-
-
-enum SteerByWireRequester{
+enum SteerByWireRequester {
     CentralEcuToSbwRequester,
 } typedef SteerByWireRequester;
 

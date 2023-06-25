@@ -6,8 +6,6 @@
 #include <malloc.h>
 
 
-
-
 struct sockaddr_in clientInetSocketAddress;
 struct sockaddr *clientInetSocketAddrPtr = (struct sockaddr *) &clientInetSocketAddress;
 socklen_t clientInetSocketLen = sizeof(clientInetSocketAddress);
@@ -42,17 +40,18 @@ int bindUnixSocket(int socketFd, const char *addressName) {
     return bind(socketFd, serverUnixSocketAddrPtr, serverUnixSocketLen);
 }
 
-int bindLocalInetSocket(int socketFd, int port){
+int bindLocalInetSocket(int socketFd, int port) {
 
     serverInetSocketAddress.sin_family = AF_INET;
     serverInetSocketAddress.sin_port = htons(port);
-    serverInetSocketAddress.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+    serverInetSocketAddress.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     return bind(socketFd, serverInetSocketAddrPtr, serverInetSocketLen);
 }
 
-int closeSocket(int socketFd){
+int closeSocket(int socketFd) {
     return close(socketFd);
 }
+
 int listenSocket(int socketFd, int queueLength) {
     return listen(socketFd, queueLength);
 }
@@ -62,7 +61,7 @@ int acceptUnixSocket(int socketFd) {
     return accept(socketFd, clientUnixSocketAddrPtr, &clientUnixSocketLen);
 }
 
-int acceptInetSocket(int socketFd){
+int acceptInetSocket(int socketFd) {
 
     return accept(socketFd, clientInetSocketAddrPtr, &clientInetSocketLen);
 }
@@ -75,11 +74,11 @@ int connectUnixSocket(int socketFd, const char *addressName) {
     return connect(socketFd, serverUnixSocketAddrPtr, serverUnixSocketLen);
 }
 
-int connectLocalInetSocket(int socketFd, int port){
+int connectLocalInetSocket(int socketFd, int port) {
 
     serverInetSocketAddress.sin_family = AF_INET;
     serverInetSocketAddress.sin_port = htons(port);
-    serverInetSocketAddress.sin_addr.s_addr=htonl(INADDR_LOOPBACK);
+    serverInetSocketAddress.sin_addr.s_addr = htonl(INADDR_LOOPBACK);
     return connect(socketFd, serverInetSocketAddrPtr, serverInetSocketLen);
 }
 

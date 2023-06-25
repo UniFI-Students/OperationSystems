@@ -34,15 +34,19 @@ void closeFileDescriptors();
 
 void handleInterruptSignal();
 
+void instantiateTcSocket();
+
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
         logLastErrorWithWhenMessage("Unassigned argument for central ecu pid.");
         exit(-1);
     }
-    signal(SIGINT, handleInterruptSignal);
     cEcuPid = atoi(argv[1]);
 
+    signal(SIGINT, handleInterruptSignal);
+
     startRand(time(NULL));
+
     ThrottleControlCommand cmd;
 
     setLogFileName(THROTTLE_CONTROL_LOGFILE);
@@ -50,28 +54,33 @@ int main(int argc, char *argv[]) {
     instantiateLogFileDescriptor();
     instantiateErrorLogFileDescriptor();
 
-    tcSocketFd = createInetSocket(DEFAULT_PROTOCOL);
-    if (tcSocketFd < 0) {
-        logLastError();
-        closeFileDescriptors();
-        exit(-1);
-    }
+    instantiateTcSocket();
 
-    if (bindLocalInetSocket(tcSocketFd, THROTTLE_CONTROL_INET_SOCKET_PORT) < 0) {
-        logLastError();
-        closeFileDescriptors();
-        exit(-1);
-    }
-    if (listenSocket(tcSocketFd, 5) < 0) {
-        logLastError();
-        closeFileDescriptors();
-        exit(-1);
-    }
 
     while (1) {
         receiveCommandFromEcu(&cmd);
         if (isThrottleFailed()) handleFailedThrottleCommand(cmd);
         else handleSucceedThrottleCommand(cmd);
+    }
+}
+
+void instantiateTcSocket() {
+    tcSocketFd = createInetSocket(DEFAULT_PROTOCOL);
+    if (tcSocketFd < 0) {
+        logLastErrorWithWhenMessage("creating a socket for the tc");
+        closeFileDescriptors();
+        exit(-1);
+    }
+
+    if (bindLocalInetSocket(tcSocketFd, THROTTLE_CONTROL_INET_SOCKET_PORT) < 0) {
+        logLastErrorWithWhenMessage("binding a socket for the tc");
+        closeFileDescriptors();
+        exit(-1);
+    }
+    if (listenSocket(tcSocketFd, 5) < 0) {
+        logLastErrorWithWhenMessage("listening a socket for the tc");
+        closeFileDescriptors();
+        exit(-1);
     }
 }
 
@@ -96,7 +105,7 @@ bool isThrottleFailed() {
 void receiveCommandFromEcu(ThrottleControlCommand *pCommand) {
     acceptedSocketFd = acceptInetSocket(tcSocketFd);
     if (acceptedSocketFd < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("accepting a request to the tc");
         return;
     }
 
@@ -105,7 +114,7 @@ void receiveCommandFromEcu(ThrottleControlCommand *pCommand) {
     unsigned int requestDataLength;
 
     if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("reading the request sent to the tc");
         closeSocket(acceptedSocketFd);
         return;
     }
@@ -119,7 +128,7 @@ void receiveCommandFromEcu(ThrottleControlCommand *pCommand) {
             pCommand->quantity = cmdPtr->quantity;
             break;
         default:
-            logLastErrorWithWhenMessage("Unknown request arrived.");
+            logErrorMessage("Unknown request arrived.");
             break;
     }
 
@@ -137,6 +146,9 @@ void handleSucceedThrottleCommand(ThrottleControlCommand command) {
         case Increment:
             commandType = INCREMENT;
             break;
+        default:
+            logErrorMessage("Unhandled throttle command because of undeclared command type");
+            return;
     }
 
     sprintf(message, "%s %s %lu", getCurrentDateTime(), commandType, command.quantity);

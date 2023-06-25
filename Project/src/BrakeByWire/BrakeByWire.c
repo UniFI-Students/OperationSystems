@@ -125,7 +125,7 @@ void handleBrakeCommand(BrakeByWireCommand command) {
             commandType = BRAKE;
             break;
         default:
-            logErrorMessage("Unhandled break by wire command because of undeclared type");
+            logErrorMessage("Unhandled break by wire command because of undeclared command type");
             return;
     }
 

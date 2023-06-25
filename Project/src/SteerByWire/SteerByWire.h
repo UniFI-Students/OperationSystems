@@ -1,0 +1,11 @@
+#ifndef OS_STEER_BY_WIRE_H
+#define OS_STEER_BY_WIRE_H
+
+#define STEERING_LEFT "STO GIRANDO A SINISTRA"
+#define STEERING_RIGHT "STO GIRANDO A DESTRA"
+#define NO_ACTION "NO ACTION"
+
+#define STEER_BY_WIRE_LOGFILE "steer.log"
+#define STEER_BY_WIRE_ERROR_LOGFILE "steer.eLog"
+
+#endif 

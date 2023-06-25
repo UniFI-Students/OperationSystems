@@ -22,7 +22,7 @@ void closeFileDescriptors();
 
 void handleInterruptSignal();
 
-void logBytes(char buffer[8]);
+void logBytes(const char *bytes, unsigned int nBytes);
 
 void assignDataSourceFilePath(char *argStr);
 
@@ -60,7 +60,7 @@ int main(int argc, char *argv[]) {
     while (1) {
         if (readBytes(buffer, 8) == 8) {
             sendDataToEcu(ForwardFacingRadarToCentralEcuRequester, buffer, 8);
-            logBytes(buffer);
+            logBytes(buffer, 8);
 
         }
         sleep(1);
@@ -74,10 +74,10 @@ void assignDataSourceFilePath(char *argStr) {
         getCwdWithFileName(ARTIFICIAL_EXECUTION_RANDOM_DATASOURCE, dataSourceFilePath, sizeof(dataSourceFilePath));
 }
 
-void logBytes(char buffer[8]) {
+void logBytes(const char *bytes, unsigned int nBytes) {
     char logString[128];
     memset(logString, 0, sizeof(logString));
-    convertBytesToStringRepresentation(logString, buffer, 8);
+    convertBytesToStringRepresentation(logString, bytes, nBytes);
     logMessage(logString);
 }
 

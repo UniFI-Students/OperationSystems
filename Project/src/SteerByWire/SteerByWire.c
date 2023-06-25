@@ -3,18 +3,14 @@
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
 #include "../Shared/Consts.h"
+#include "SteerByWire.h"
 #include <stdbool.h>
 #include <stdlib.h>
 #include <fcntl.h>
 #include <errno.h>
 #include <signal.h>
 
-#define STEERING_LEFT "STO GIRANDO A SINISTRA"
-#define STEERING_RIGHT "STO GIRANDO A DESTRA"
-#define NO_ACTION "NO ACTION"
 
-#define STEER_BY_WIRE_LOGFILE "steer.log"
-#define STEER_BY_WIRE_ERROR_LOGFILE "steer.eLog"
 
 int sbwSocketFd;
 int acceptedSocketFd;
@@ -32,8 +28,9 @@ void closeFileDescriptors();
 
 void handleInterruptSignal();
 
+void instantiateSbwSocket();
+
 int main(void) {
-    signal(SIGINT, handleInterruptSignal);
     SteerByWireCommand steerCommand;
 
     setLogFileName(STEER_BY_WIRE_LOGFILE);
@@ -41,25 +38,9 @@ int main(void) {
     instantiateLogFileDescriptor();
     instantiateErrorLogFileDescriptor();
 
-    sbwSocketFd = createInetSocket(DEFAULT_PROTOCOL);
-    if (sbwSocketFd < 0) {
-        logLastError();
-        closeFileDescriptors();
-        exit(-1);
-    }
+    instantiateSbwSocket();
 
-    fcntl(sbwSocketFd, F_SETFL, fcntl(sbwSocketFd, F_GETFL, 0) | O_NONBLOCK);
-
-    if (bindLocalInetSocket(sbwSocketFd, STEER_BY_WIRE_INET_SOCKET_PORT) < 0) {
-        logLastError();
-        closeFileDescriptors();
-        exit(-1);
-    }
-    if (listenSocket(sbwSocketFd, 5) < 0) {
-        logLastError();
-        closeFileDescriptors();
-        exit(-1);
-    }
+    signal(SIGINT, handleInterruptSignal);
 
     while (1) {
         if (receiveCommandFromEcu(&steerCommand)) {
@@ -76,6 +57,28 @@ int main(void) {
             handleNoAction();
             sleep(1);
         }
+    }
+}
+
+void instantiateSbwSocket() {
+    sbwSocketFd = createInetSocket(DEFAULT_PROTOCOL);
+    if (sbwSocketFd < 0) {
+        logLastErrorWithWhenMessage("creating a socket for the sbw");
+        closeFileDescriptors();
+        exit(-1);
+    }
+
+    fcntl(sbwSocketFd, F_SETFL, fcntl(sbwSocketFd, F_GETFL, 0) | O_NONBLOCK);
+
+    if (bindLocalInetSocket(sbwSocketFd, STEER_BY_WIRE_INET_SOCKET_PORT) < 0) {
+        logLastErrorWithWhenMessage("binding a socket for the sbw");
+        closeFileDescriptors();
+        exit(-1);
+    }
+    if (listenSocket(sbwSocketFd, 5) < 0) {
+        logLastErrorWithWhenMessage("listening a socket for the sbw");
+        closeFileDescriptors();
+        exit(-1);
     }
 }
 
@@ -124,7 +127,7 @@ bool receiveCommandFromEcu(SteerByWireCommand *pCommand) {
     unsigned int requestDataLength;
 
     if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0){
-        logLastError();
+        logLastErrorWithWhenMessage("reading the request send to the sbw");
         closeSocket(acceptedSocketFd);
         return false;
     }
@@ -137,7 +140,7 @@ bool receiveCommandFromEcu(SteerByWireCommand *pCommand) {
             pCommand->type = cmdPtr->type;
             break;
         default:
-            logLastErrorWithWhenMessage("Unknown request arrived.");
+            logErrorMessage("Unknown request arrived.");
             break;
     }
 

@@ -27,36 +27,38 @@ void closeFileDescriptors();
 
 void handleInterruptSignal();
 
+void assignDataSourceFilePath(char *argStr);
+
+void logBytes(const char *bytes, unsigned int nBytes);
+
 int main(int argc, char *argv[]) {
+
+    if (argc <= 1) {
+        logErrorMessage("Unassigned execution type argument");
+        closeFileDescriptors();
+        return -1;
+    }
+
+    assignDataSourceFilePath(argv[1]);
+
+    if (strlen(dataSourceFilePath) == 0) {
+        logErrorMessage("Incorrect execution type argument");
+        closeFileDescriptors();
+        exit(-1);
+    }
+
     signal(SIGINT, handleInterruptSignal);
-    char buffer[8];
+
 
     setLogFileName(SURROUND_CAMERAS_LOGFILE);
     setErrorLogFileName(SURROUND_CAMERAS_ERROR_LOGFILE);
     instantiateLogFileDescriptor();
     instantiateErrorLogFileDescriptor();
-
-    if (argc <= 1) {
-        logLastErrorWithWhenMessage("Unassigned execution type argument.");
-        closeFileDescriptors();
-        return -1;
-    }
-
-    if (strcmp(argv[1], NORMAL_EXECUTION) == 0)
-        strcpy(dataSourceFilePath, NORMAL_EXECUTION_RANDOM_DATASOURCE);
-    if (strcmp(argv[1], ARTIFICIAL_EXECUTION) == 0)
-        getCwdWithFileName(ARTIFICIAL_EXECUTION_RANDOM_DATASOURCE, dataSourceFilePath, sizeof(dataSourceFilePath));
-
-    if (strlen(dataSourceFilePath) == 0) {
-        logLastErrorWithWhenMessage("Incorrect execution type argument.");
-        closeFileDescriptors();
-        return -1;
-    }
 
     dataSourceFileFd = open(dataSourceFilePath, O_RDONLY);
     if (dataSourceFileFd < 0) {
         logMessage(dataSourceFilePath);
-        logLastErrorWithWhenMessage("Data source file not found.");
+        logErrorMessage("Data source file not found.");
         closeFileDescriptors();
         return -1;
     }
@@ -66,19 +68,29 @@ int main(int argc, char *argv[]) {
     instantiateLogFileDescriptor();
     instantiateErrorLogFileDescriptor();
 
-    strcpy(dataSourceFilePath, argv[1]);
-
+    char buffer[8];
     while (1) {
 
         if (readBytes(buffer, 8) == 8) {
-            char logString[128];
-            memset(logString, 0, sizeof(logString));
             sendBytesToParkAssist(buffer, 8);
-            convertBytesToStringRepresentation(logString, buffer, 8);
-            logMessage(logString);
+            logBytes(buffer, 8);
         }
         sleep(1);
     }
+}
+
+void logBytes(const char *bytes, unsigned int nBytes) {
+    char logString[128];
+    memset(logString, 0, sizeof(logString));
+    convertBytesToStringRepresentation(logString, bytes, nBytes);
+    logMessage(logString);
+}
+
+void assignDataSourceFilePath(char *argStr) {
+    if (strcmp(argStr, NORMAL_EXECUTION) == 0)
+        strcpy(dataSourceFilePath, NORMAL_EXECUTION_RANDOM_DATASOURCE);
+    if (strcmp(argStr, ARTIFICIAL_EXECUTION) == 0)
+        getCwdWithFileName(ARTIFICIAL_EXECUTION_RANDOM_DATASOURCE, dataSourceFilePath, sizeof(dataSourceFilePath));
 }
 
 void handleInterruptSignal() {
@@ -105,7 +117,7 @@ void sendBytesToParkAssist(const char *bytes, unsigned int nBytes) {
         return;
     }
     if (writeRequest(paSocketFd, SurroundViewCamerasToParkAssistRequester, bytes, nBytes) < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("writing a request to the pa");
         closeSocket(paSocketFd);
         return;
     }
