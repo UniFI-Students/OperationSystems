@@ -11,7 +11,7 @@
 void convertBytesToStringRepresentation(char *dest, const char *source, unsigned int size) {
     char convertedValueToHexString[16];
     for (int i=0; i<8; ++i){
-        sprintf(convertedValueToHexString, "| 0x%.8X ", source[0]);
+        sprintf(convertedValueToHexString, "| 0x%.8X ", source[i]);
         strcat(dest, convertedValueToHexString);
     }
     strcat(dest, "|");

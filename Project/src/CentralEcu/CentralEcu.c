@@ -109,6 +109,8 @@ bool hasPaRequestBadValue(void *requestData, unsigned int dataLength);
 
 void reParkCar();
 
+void stopActuatorsWithBbw();
+
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
         logLastErrorWithWhenMessage("Unassigned execution type argument.");
@@ -206,6 +208,7 @@ void registerSignalHandlers() {
 void handleThrottleFailSignal() {
     speed = 0;
     desiredSpeed = 0;
+    logMessage("Throttle failed. Terminating current execution.");
     sendMessageToHmi("Throttle failed. Terminating current execution.");
     stopSensors();
     stopParkingSensors();
@@ -284,6 +287,7 @@ void handleParkingCommandFromHmi() {
 
 void handleStopCommandFromHmi() {
     if (carState != CarStateStarted) return;
+    logMessage("Sending stop signal to brake-by-wire.");
     sendMessageToHmi("Sending stop signal to brake-by-wire.");
     stopCar();
 }
@@ -369,7 +373,15 @@ void stopHmiReader() {
 void initiateParking() {
     carState = CarStatePreparingToPark;
     desiredSpeed = 0;
+    stopActuatorsWithBbw();
     runParkingSensors();
+}
+
+void stopActuatorsWithBbw() {
+    if (steerByWirePid != 0) kill(steerByWirePid, SIGINT);
+    if (throttleControlPid != 0) kill(throttleControlPid, SIGINT);
+    steerByWirePid = 0;
+    throttleControlPid = 0;
 }
 
 
@@ -377,18 +389,21 @@ void handleFwcRequest(void *requestDataPtr, unsigned int requestDataLength) {
     if (carState != CarStateStarted) return;
 
     if (strcmp(requestDataPtr, FWC_STEER_LEFT_MESSAGE) == 0) {
+        logMessage("Sending steer left request to sbw.");
         sendMessageToHmi("Sending steer left request to sbw.");
         steer(Left);
         return;
     }
 
     if (strcmp(requestDataPtr, FWC_STEER_RIGHT_MESSAGE) == 0) {
+        logMessage("Sending steer right request to sbw.");
         sendMessageToHmi("Sending steer right request to sbw.");
         steer(Right);
         return;
     }
 
     if (strcmp(requestDataPtr, FWC_DANGER_MESSAGE) == 0) {
+        logMessage("Sending stop signal to brake-by-wire.");
         sendMessageToHmi("Sending stop signal to brake-by-wire.");
         stopCar();
         return;
@@ -426,16 +441,17 @@ void adjustSpeedToDesiredSpeed() {
         int throttleValue = DEFAULT_THROTTLE_QUANTITY;
         if (speed + throttleValue > desiredSpeed) throttleValue = desiredSpeed - speed;
         speed += throttleValue;
-
-        sendThrottleRequestToTc(throttleValue);
+        logMessage("Sending throttle request to tc.");
         sendMessageToHmi("Sending throttle request to tc.");
+        sendThrottleRequestToTc(throttleValue);
     } else if (speed > desiredSpeed) {
         int brakeValue = DEFAULT_BRAKE_QUANTITY;
         if (speed - brakeValue < desiredSpeed) brakeValue = speed - desiredSpeed;
         speed -= brakeValue;
 
-        sendBrakeRequestToBbw(brakeValue);
+        logMessage("Sending brake request to bbw.");
         sendMessageToHmi("Sending brake request to bbw.");
+        sendBrakeRequestToBbw(brakeValue);
     }
 }
 
@@ -454,15 +470,18 @@ void parkCar() {
     hasReceivedBadValue = false;
     carState = CarStateParking;
     activateParkAssist();
+    logMessage("Activating Park assist.");
     sendMessageToHmi("Activating Park assist.");
 }
 
 void reParkCar() {
+    logMessage("Car failed to park.");
     sendMessageToHmi("Car failed to park.");
     remainingSecondsForParkAssist = TIME_NEEDED_TO_PARK;
     hasReceivedBadValue = false;
     carState = CarStateParking;
     activateParkAssist();
+    logMessage("Reactivating Park assist.");
     sendMessageToHmi("Reactivating Park assist.");
 }
 
@@ -483,6 +502,7 @@ bool hasPaRequestBadValue(void *requestData, unsigned int dataLength) {
 void handleSuccessfulParking() {
     carState = CarStateNone;
     stopParkingSensors();
+    logMessage("Car were successfully parked.");
     sendMessageToHmi("Car were successfully parked.");
 }
 

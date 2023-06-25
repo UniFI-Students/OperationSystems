@@ -87,7 +87,7 @@ ECU_OBJ_FILES = build/CentralEcu.o 				\
 
 #			END OBJ FILE DEPENDENCIES			#
 
-DEBUG ?= 1
+DEBUG ?= 0
 
 ifeq ($(DEBUG), 1)
     CFLAGS = -g
