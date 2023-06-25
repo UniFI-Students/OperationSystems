@@ -17,19 +17,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/Shared/Consts.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Shared/Consts.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWire.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/frontCamera.data" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/frontCamera.data" afterDir="false" />
-    </list>
+    <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -125,8 +113,8 @@
       <recent name="F:\OperationSystems\Project\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Application.CentralEcu (NORMAL)">
-    <configuration name="CentralEcu (ARTIFICIAL)" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="ARTIFICIALE" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ContentRoot$/Project/app" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="cleanLogs" CONFIG_NAME="cleanLogs" version="1" RUN_PATH="./ecu">
+  <component name="RunManager" selected="Makefile Target.clean">
+    <configuration name="CentralEcu (ARTIFICIAL)" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="ARTIFICIALE" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ProjectFileDir$/Project/app" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="cleanLogs" CONFIG_NAME="cleanLogs" version="1" RUN_PATH="./ecu">
       <envs>
         <env name="DEBUG" value=" 1" />
       </envs>
@@ -184,8 +172,8 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Makefile Target.all" />
         <item itemvalue="Makefile Target.clean" />
+        <item itemvalue="Makefile Target.all" />
         <item itemvalue="Makefile Target.cleanLogs" />
       </list>
     </recent_temporary>
@@ -212,7 +200,7 @@
       <workItem from="1687595525360" duration="1349000" />
       <workItem from="1687619797832" duration="6293000" />
       <workItem from="1687639138025" duration="24358000" />
-      <workItem from="1687664689339" duration="2215000" />
+      <workItem from="1687664689339" duration="2518000" />
     </task>
     <servers />
   </component>
@@ -239,7 +227,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c</url>
-          <line>145</line>
+          <line>146</line>
           <option name="timeStamp" value="107" />
         </line-breakpoint>
       </breakpoints>
