@@ -79,7 +79,8 @@ ECU_OBJ_FILES = build/CentralEcu.o 				\
 				build/CentralEcuHmiIpc.o		\
 				build/CentralEcuBbwIpc.o		\
 				build/CentralEcuSbwIpc.o		\
-				build/CentralEcuTcIpc.o
+				build/CentralEcuTcIpc.o			\
+				build/CentralEcuPaIpc.o
 
 #			END OBJ FILE DEPENDENCIES			#
 

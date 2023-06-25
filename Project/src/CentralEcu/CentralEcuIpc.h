@@ -1,5 +1,5 @@
-#ifndef OS_CENTRAL_ECU_H
-#define OS_CENTRAL_ECU_H
+#ifndef OS_CENTRAL_ECU_IPC_H
+#define OS_CENTRAL_ECU_IPC_H
 
 
 enum CentralEcuRequester {
@@ -22,4 +22,5 @@ struct HumanMachineInterfaceCommand {
 } typedef HumanMachineInterfaceCommand;
 
 int sendDataToEcu(CentralEcuRequester requester, const void *data, unsigned int dataLength);
+
 #endif

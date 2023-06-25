@@ -5,29 +5,18 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include <fcntl.h>
 #include <stdbool.h>
+#include "CentralEcu.h"
 #include "CentralEcuIpc.h"
 #include "CentralEcuBbwIpc/CentralEcuBbwIpc.h"
 #include "CentralEcuHmiIpc/CentralEcuHmiIpc.h"
 #include "CentralEcuSbwIpc/CentralEcuSbwIpc.h"
 #include "CentralEcuTcIpc/CentralEcuTcIpc.h"
+#include "CentralEcuPaIpc/CentralEcuPaIpc.h"
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
-#include "../HumanMachineInterface/HumanMachineInterfaceIpc.h"
 #include "../Shared/Consts.h"
 #include "../FilePathProvider/FilePathProvider.h"
-#include "../ParkAssist/ParkAssistIpc.h"
-
-#define CENTRAL_ECU_LOGFILE "ECU.log"
-#define CENTRAL_ECU_ERROR_LOGFILE "ECU.eLog"
-
-enum CarState {
-    CarStateNone = 1 << 0,
-    CarStateStarted = 1 << 1,
-    CarStatePreparingToPark = 1 << 2,
-    CarStateParking = 1 << 3
-} typedef CarState;
 
 int cEcuSocketFd;
 int acceptedSocket;
@@ -116,8 +105,6 @@ void steer(enum SteerByWireCommandType type);
 void handleAlarmSignal();
 
 void parkCar();
-
-void activateParkAssist();
 
 void handleSuccessfulParking();
 
@@ -248,12 +235,10 @@ void handleAlarmSignal() {
     if (carState == CarStatePreparingToPark && speed == 0) {
         parkCar();
     }
-    if (carState & (CarStateStarted | CarStatePreparingToPark)) adjustSpeedToDesiredSpeed();
+    if (carState == CarStateStarted || carState == CarStatePreparingToPark) adjustSpeedToDesiredSpeed();
 
     alarm(1);
 }
-
-
 
 
 void terminateProgramExecution(int status) {
@@ -269,7 +254,7 @@ void closeChildProcesses() {
 }
 
 void handleHmiRequest(const void *requestDataPtr, unsigned int requestDataLength) {
-    if (carState & (CarStatePreparingToPark | CarStateParking)) return;
+    if (carState == CarStateStarted || carState == CarStatePreparingToPark) return;
     HumanMachineInterfaceCommand *cmdPtr = (HumanMachineInterfaceCommand *) requestDataPtr;
     switch (cmdPtr->type) {
 
@@ -512,21 +497,4 @@ void handleSuccessfulParking() {
     sendMessageToHmi("Car were successfully parked.");
 }
 
-void activateParkAssist() {
-    int paSocket = createInetSocket(DEFAULT_PROTOCOL);
-    if (paSocket < 0) {
-        logLastError();
-        return;
-    }
-    int paConnectionRes = connectLocalInetSocket(paSocket, PARK_ASSIST_INET_SOCKET_PORT);
-    while (paConnectionRes < 0) {
-        logLastErrorWithWhenMessage("Trying to connect to pa.");
-        paConnectionRes = connectLocalInetSocket(paSocket, PARK_ASSIST_INET_SOCKET_PORT);
-        sleep(1);
-    }
 
-    if (writeRequest(paSocket, CentralEcuToParkAssistRequester, NULL, 0)) {
-        logLastError();
-    }
-    closeSocket(paSocket);
-}
