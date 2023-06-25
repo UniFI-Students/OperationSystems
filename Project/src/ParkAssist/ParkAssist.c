@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <signal.h>
 #include "ParkAssistIpc.h"
 #include "../Logger/Logger.h"
@@ -11,9 +10,8 @@
 #include "../InterProcessComunication/Ipc.h"
 #include "../CentralEcu/CentralEcuIpc.h"
 #include "../Shared/Utils.h"
+#include "ParkAssist.h"
 
-#define PARK_ASSIST_LOGFILE "assist.log"
-#define PARK_ASSIST_ERROR_LOGFILE "assist.eLog"
 
 char dataSourceFilePath[128];
 int dataSourceFileFd;
@@ -44,8 +42,30 @@ void stopSurroundViewCameras();
 
 void registerSignalHandlers();
 
+void instantiatePaSocket();
+
+void assignDataSourceFilePath(char *argStr);
+
+void logBytes(const char *bytes, unsigned int nBytes);
+
 int main(int argc, char *argv[]) {
-    char buffer[8];
+
+    if (argc <= 1) {
+        logErrorMessage("Unassigned execution type argument");
+        closeFileDescriptors();
+        return -1;
+    }
+
+    strcpy(executionType, argv[1]);
+
+    assignDataSourceFilePath(argv[1]);
+
+    if (strlen(dataSourceFilePath) == 0) {
+        logErrorMessage("Incorrect execution type argument");
+        closeFileDescriptors();
+        exit(-1);
+    }
+
 
     registerSignalHandlers();
 
@@ -54,24 +74,6 @@ int main(int argc, char *argv[]) {
     instantiateLogFileDescriptor();
     instantiateErrorLogFileDescriptor();
 
-    if (argc <= 1) {
-        logLastErrorWithWhenMessage("Unassigned execution type argument.");
-        closeFileDescriptors();
-        return -1;
-    }
-
-    if (strcmp(argv[1], NORMAL_EXECUTION) == 0)
-        strcpy(dataSourceFilePath, NORMAL_EXECUTION_RANDOM_DATASOURCE);
-    if (strcmp(argv[1], ARTIFICIAL_EXECUTION) == 0)
-        getCwdWithFileName(ARTIFICIAL_EXECUTION_RANDOM_DATASOURCE, dataSourceFilePath, sizeof(dataSourceFilePath));
-
-    if (strlen(dataSourceFilePath) == 0) {
-        logLastErrorWithWhenMessage("Incorrect execution type argument.");
-        closeFileDescriptors();
-        return -1;
-    }
-
-    strcpy(executionType, argv[1]);
 
     dataSourceFileFd = open(dataSourceFilePath, O_RDONLY);
     if (dataSourceFileFd < 0) {
@@ -81,27 +83,10 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    paSocketFd = createInetSocket(DEFAULT_PROTOCOL);
-    if (paSocketFd < 0) {
-        logLastError();
-        closeFileDescriptors();
-        exit(-1);
-    }
-
-    if (bindLocalInetSocket(paSocketFd, PARK_ASSIST_INET_SOCKET_PORT) < 0) {
-        logLastError();
-        closeFileDescriptors();
-        exit(-1);
-    }
-    if (listenSocket(paSocketFd, 5) < 0) {
-        logLastError();
-        closeFileDescriptors();
-        exit(-1);
-    }
-
-    fcntl(paSocketFd, F_SETFL, fcntl(paSocketFd, F_GETFL) | O_NONBLOCK);
+    instantiatePaSocket();
 
 
+    char buffer[8];
     while (1) {
         if (receiveParkCommandFromEcu() < 0) continue;
         runSurroundViewCameras();
@@ -110,16 +95,42 @@ int main(int argc, char *argv[]) {
                 sendDataToEcu(ParkAssistToCentralEcuRequester, buffer, 8);
             }
             if (readBytes(buffer, 8) == 8) {
-                char logString[128];
-                memset(logString, 0, sizeof(logString));
                 sendDataToEcu(ParkAssistToCentralEcuRequester, buffer, 8);
-                convertBytesToStringRepresentation(logString, buffer, 8);
-                logMessage(logString);
+                logBytes(buffer, 8);
             }
             sleep(1);
         }
         stopSurroundViewCameras();
     }
+}
+
+void assignDataSourceFilePath(char *argStr) {
+    if (strcmp(argStr, NORMAL_EXECUTION) == 0)
+        strcpy(dataSourceFilePath, NORMAL_EXECUTION_RANDOM_DATASOURCE);
+    if (strcmp(argStr, ARTIFICIAL_EXECUTION) == 0)
+        getCwdWithFileName(ARTIFICIAL_EXECUTION_RANDOM_DATASOURCE, dataSourceFilePath, sizeof(dataSourceFilePath));
+}
+
+void instantiatePaSocket() {
+    paSocketFd = createInetSocket(DEFAULT_PROTOCOL);
+    if (paSocketFd < 0) {
+        logLastErrorWithWhenMessage("creating a socket for the pa");
+        closeFileDescriptors();
+        exit(-1);
+    }
+
+    if (bindLocalInetSocket(paSocketFd, PARK_ASSIST_INET_SOCKET_PORT) < 0) {
+        logLastErrorWithWhenMessage("binding a socket for the pa");
+        closeFileDescriptors();
+        exit(-1);
+    }
+    if (listenSocket(paSocketFd, 5) < 0) {
+        logLastErrorWithWhenMessage("listening a socket for the pa");
+        closeFileDescriptors();
+        exit(-1);
+    }
+
+    fcntl(paSocketFd, F_SETFL, fcntl(paSocketFd, F_GETFL) | O_NONBLOCK);
 }
 
 void registerSignalHandlers() {
@@ -149,7 +160,7 @@ void execEcuChildProcessWithArgument(const char *childName, const char *arg) {
     char buff[128];
     getCwdWithFileName(childName, buff, sizeof(buff));
     execl(buff, childName, arg, (char *) 0);
-    logLastError();
+    logLastErrorWithWhenMessage("creating a child process to execute");
     exit(-1);
 }
 
@@ -175,13 +186,13 @@ int receive8BytesFromSurroundViewCameras(char buffer[8]) {
     unsigned int requestDataLength;
 
     if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("reading the request sent to the pa from surround view cameras");
         closeSocket(acceptedSocketFd);
         return -1;
     }
 
     if (requesterId != SurroundViewCamerasToParkAssistRequester) {
-        logLastErrorWithWhenMessage("Incorrect requester.");
+        logErrorMessage("Incorrect requester. Expected surround view cameras to be the requester");
         free(requestData);
         closeSocket(acceptedSocketFd);
         return -1;
@@ -205,7 +216,7 @@ int receiveParkCommandFromEcu() {
     unsigned int requestDataLength;
 
     if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("reading the request sent to the pa from centralEcu");
         closeSocket(acceptedSocketFd);
         return -1;
     }
@@ -214,8 +225,15 @@ int receiveParkCommandFromEcu() {
     closeSocket(acceptedSocketFd);
 
     if (requesterId != CentralEcuToParkAssistRequester) {
-        logLastErrorWithWhenMessage("Incorrect requester.");
+        logErrorMessage("Incorrect requester. Expected central ecu to be the requester");
         return -1;
     }
     return 0;
+}
+
+void logBytes(const char *bytes, unsigned int nBytes) {
+    char logString[128];
+    memset(logString, 0, sizeof(logString));
+    convertBytesToStringRepresentation(logString, bytes, nBytes);
+    logMessage(logString);
 }
