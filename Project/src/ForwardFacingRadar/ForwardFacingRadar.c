@@ -24,6 +24,8 @@ void sendBytesToEcu(const char *bytes, unsigned int nBytes);
 
 void closeFileDescriptors();
 
+void convertToStringRepresentation(char *dest, const char *source, unsigned int size);
+
 int main(int argc, char *argv[]) {
 
     char buffer[8];
@@ -62,13 +64,24 @@ int main(int argc, char *argv[]) {
 
 
     while (1) {
-
         if (readBytes(buffer, 8) == 8) {
+            char logString[128];
+            memset(logString, 0, sizeof(logString));
             sendBytesToEcu(buffer, 8);
-            logMessage(buffer);
+            convertToStringRepresentation(logString, buffer, 8);
+            logMessage(logString);
         }
         sleep(1);
     }
+}
+
+void convertToStringRepresentation(char *dest, const char *source, unsigned int size) {
+    char convertedValueToHexString[16];
+    for (int i=0; i<8; ++i){
+        sprintf(convertedValueToHexString, "| 0x%.8X ", source[0]);
+        strcat(dest, convertedValueToHexString);
+    }
+    strcat(dest, "|");
 }
 
 void closeFileDescriptors() {

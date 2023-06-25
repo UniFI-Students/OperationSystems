@@ -2,10 +2,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
+#include <stdio.h>
 #include "SurroundViewCameras.h"
 #include "../Logger/Logger.h"
 #include "../Shared/Consts.h"
 #include "../FilePathProvider/FilePathProvider.h"
+#include "../InterProcessComunication/Ipc.h"
+#include "../ParkAssist/ParkAssistIpc.h"
 
 
 #define SURROUND_CAMERAS_LOGFILE "cameras.log"
@@ -16,9 +19,11 @@ int dataSourceFileFd;
 
 int readBytes(char *buffer, unsigned int nBytes);
 
-void sendBytesToParkAssist(char buffer[8]);
+void sendBytesToParkAssist(const char *bytes, unsigned int nBytes);
 
 void closeFileDescriptors();
+
+void convertToStringRepresentation(char *dest, const char *source, unsigned int size);
 
 int main(int argc, char *argv[]) {
     char buffer[8];
@@ -63,11 +68,23 @@ int main(int argc, char *argv[]) {
     while (1) {
 
         if (readBytes(buffer, 8) == 8) {
-            sendBytesToParkAssist(buffer);
-            logMessage(buffer);
+            char logString[128];
+            memset(logString, 0, sizeof(logString));
+            sendBytesToParkAssist(buffer, 8);
+            convertToStringRepresentation(logString, buffer, 8);
+            logMessage(logString);
         }
         sleep(1);
     }
+}
+
+void convertToStringRepresentation(char *dest, const char *source, unsigned int size) {
+    char convertedValueToHexString[16];
+    for (int i = 0; i < 8; ++i) {
+        sprintf(convertedValueToHexString, "| 0x%.8X ", source[0]);
+        strcat(dest, convertedValueToHexString);
+    }
+    strcat(dest, "|");
 }
 
 void closeFileDescriptors() {
@@ -77,8 +94,23 @@ void closeFileDescriptors() {
 
 }
 
-void sendBytesToParkAssist(char buffer[8]) {
-    //TODO: Implement sendBytesToEcu
+void sendBytesToParkAssist(const char *bytes, unsigned int nBytes) {
+    int paSocketFd = createInetSocket(DEFAULT_PROTOCOL);
+    if (paSocketFd < 0) {
+        logLastError();
+        return;
+    }
+    if (connectLocalInetSocket(paSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
+        logLastErrorWithMessage("Could not establish connection to Park assist");
+        closeSocket(paSocketFd);
+        return;
+    }
+    if (writeRequest(paSocketFd, SurroundViewCamerasToParkAssistRequester, bytes, nBytes) < 0) {
+        logLastError();
+        closeSocket(paSocketFd);
+        return;
+    }
+    if (closeSocket(paSocketFd) < 0) logLastError();
 }
 
 int readBytes(char *buffer, unsigned int nBytes) {

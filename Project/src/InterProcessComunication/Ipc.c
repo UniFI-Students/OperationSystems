@@ -92,7 +92,7 @@ int readRequest(int fd, int *requesterId, void **requestData, unsigned int *requ
     read(fd, requesterId, sizeof(int));
     read(fd, requestDataLengthInBytes, sizeof(int));
 
-    *requestData = malloc(*requestDataLengthInBytes);
+    *requestData = calloc(*requestDataLengthInBytes, 1);
     int bytesToRead = *requestDataLengthInBytes;
     while (bytesToRead != 0) {
         int bytesRead = (int) read(fd, *requestData, bytesToRead);

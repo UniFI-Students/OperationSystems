@@ -45,12 +45,14 @@ FFR_OBJ_FILES = build/ForwardFacingRadar.o 		\
 
 #PARK ASSIST
 PA_OBJ_FILES = build/ParkAssist.o 				\
+				build/Ipc.o						\
 				build/Logger.o 					\
 				build/DateProvider.o			\
 				build/FilePathProvider.o
 
 #SURROUND VIEW CAMERAS
 SVC_OBJ_FILES = build/SurroundViewCameras.o 	\
+				build/Ipc.o						\
 				build/Logger.o 					\
 				build/DateProvider.o			\
 				build/FilePathProvider.o
