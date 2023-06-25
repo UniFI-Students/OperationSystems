@@ -470,6 +470,7 @@ void parkCar() {
 }
 
 void reParkCar() {
+    sendMessageToHmi("Car failed to park.");
     remainingSecondsForParkAssist = TIME_NEEDED_TO_PARK;
     hasReceivedBadValue = false;
     carState = CarStateParking;
