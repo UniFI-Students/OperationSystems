@@ -225,11 +225,8 @@ void handleAlarmSignal() {
     if (remainingSecondsForParkAssist > 0) {
         --remainingSecondsForParkAssist;
         if (remainingSecondsForParkAssist == 0) {
-            if (hasReceivedBadValue) {
-                reParkCar();
-                return;
-            }
-            handleSuccessfulParking();
+            if (hasReceivedBadValue) reParkCar();
+            else handleSuccessfulParking();
         }
     }
     if (carState == CarStatePreparingToPark && speed == 0) {
