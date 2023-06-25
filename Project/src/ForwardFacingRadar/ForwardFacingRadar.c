@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <stdlib.h>
+#include <signal.h>
 #include "ForwardFacingRadar.h"
 #include "../Logger/Logger.h"
 #include "../Shared/Consts.h"
@@ -27,6 +28,7 @@ void closeFileDescriptors();
 void convertToStringRepresentation(char *dest, const char *source, unsigned int size);
 
 int main(int argc, char *argv[]) {
+    signal(SIGINT, closeFileDescriptors);
 
     char buffer[8];
 

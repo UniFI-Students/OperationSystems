@@ -24,6 +24,8 @@ int surroundViewCamerasPid;
 
 char executionType[3];
 
+void handleInterruptSignal();
+
 int receiveParkCommandFromEcu();
 
 int receive8BytesFromSurroundViewCameras(char buffer[8]);
@@ -42,8 +44,12 @@ void runSurroundViewCameras();
 
 void stopSurroundViewCameras();
 
+void registerSignalHandlers();
+
 int main(int argc, char *argv[]) {
     char buffer[8];
+
+    registerSignalHandlers();
 
     setLogFileName(PARK_ASSIST_LOGFILE);
     setErrorLogFileName(PARK_ASSIST_ERROR_LOGFILE);
@@ -118,6 +124,16 @@ int main(int argc, char *argv[]) {
     }
 }
 
+void registerSignalHandlers() {
+    signal(SIGCHLD, SIG_IGN);
+    signal(SIGINT, handleInterruptSignal);
+}
+
+void handleInterruptSignal()
+{
+    closeFileDescriptors();
+    stopSurroundViewCameras();
+}
 
 
 void runSurroundViewCameras() {
@@ -126,7 +142,7 @@ void runSurroundViewCameras() {
 }
 
 void stopSurroundViewCameras() {
-    if (surroundViewCamerasPid != 0) kill(surroundViewCamerasPid, SIGKILL);
+    if (surroundViewCamerasPid != 0) kill(surroundViewCamerasPid, SIGINT);
     surroundViewCamerasPid = 0;
 }
 

@@ -7,6 +7,7 @@
 #include <stdlib.h>
 #include <fcntl.h>
 #include <errno.h>
+#include <signal.h>
 
 #define STEERING_LEFT "STO GIRANDO A SINISTRA"
 #define STEERING_RIGHT "STO GIRANDO A DESTRA"
@@ -30,6 +31,7 @@ void handleSteerLeftCommand();
 void closeFileDescriptors();
 
 int main(void) {
+    signal(SIGINT, closeFileDescriptors);
     SteerByWireCommand steerCommand;
 
     setLogFileName(STEER_BY_WIRE_LOGFILE);

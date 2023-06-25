@@ -1,6 +1,7 @@
 #include <unistd.h>
 #include <string.h>
 #include <stdio.h>
+#include <signal.h>
 #include "FrontWindshieldCamera.h"
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
@@ -21,6 +22,8 @@ void closeFileDescriptors();
 
 int main()
 {
+
+    signal(SIGINT, closeFileDescriptors);
     char buff[64];
     getCwdWithFileName(FRONT_CAMERA_DATA_SOURCE_FILE, dataSourceFilePath, sizeof(dataSourceFilePath));
 

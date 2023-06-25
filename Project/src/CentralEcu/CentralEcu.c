@@ -246,7 +246,8 @@ void handleAlarmSignal() {
                 reParkCar();
                 return;
             }
-            handleSuccessfulParking();
+            sendMessageToHmi("CAR IS PARKED");
+            //handleSuccessfulParking();
         }
     }
     alarm(1);
@@ -321,7 +322,7 @@ void runParkingSensors() {
 }
 
 void stopParkingSensors() {
-    if (parkAssistPid != 0) kill(parkAssistPid, SIGKILL);
+    if (parkAssistPid != 0) kill(parkAssistPid, SIGINT);
     parkAssistPid = 0;
 }
 
@@ -336,8 +337,8 @@ void runSensors() {
 
 
 void stopSensors() {
-    if (frontWindShieldCameraPid != 0) kill(frontWindShieldCameraPid, SIGKILL);
-    if (forwardFacingRadarPid != 0) kill(forwardFacingRadarPid, SIGKILL);
+    if (frontWindShieldCameraPid != 0) kill(frontWindShieldCameraPid, SIGINT);
+    if (forwardFacingRadarPid != 0) kill(forwardFacingRadarPid, SIGINT);
     frontWindShieldCameraPid = 0;
     forwardFacingRadarPid = 0;
 }
@@ -354,9 +355,9 @@ void runActuators() {
 
 
 void stopActuators() {
-    if (steerByWirePid != 0) kill(steerByWirePid, SIGKILL);
-    if (throttleControlPid != 0) kill(throttleControlPid, SIGKILL);
-    if (brakeByWirePid != 0) kill(brakeByWirePid, SIGKILL);
+    if (steerByWirePid != 0) kill(steerByWirePid, SIGINT);
+    if (throttleControlPid != 0) kill(throttleControlPid, SIGINT);
+    if (brakeByWirePid != 0) kill(brakeByWirePid, SIGINT);
     steerByWirePid = 0;
     throttleControlPid = 0;
     brakeByWirePid = 0;
@@ -474,7 +475,7 @@ void parkCar() {
     stopActuators();
 
 
-    remainingSecondsForParkAssist = 30;
+    remainingSecondsForParkAssist = 2;
     hasReceivedBadValue = false;
     carState = CarStateParking;
     activateParkAssist();
@@ -482,7 +483,7 @@ void parkCar() {
 }
 
 void reParkCar() {
-    remainingSecondsForParkAssist = 30;
+    remainingSecondsForParkAssist = 2;
     hasReceivedBadValue = false;
     carState = CarStateParking;
     activateParkAssist();
@@ -506,6 +507,7 @@ bool hasPaRequestBadValue(void *requestData, unsigned int dataLength) {
 void handleSuccessfulParking() {
     carState = CarStateNone;
     stopParkingSensors();
+    sendMessageToHmi("Car were successfully parked.");
 }
 
 void activateParkAssist() {

@@ -37,6 +37,7 @@ int main(int argc, char *argv[]) {
         logLastErrorWithMessage("Unassigned argument for central ecu pid.");
         exit(-1);
     }
+    signal(SIGINT, closeFileDescriptors);
     cEcuPid = atoi(argv[1]);
 
     startRand(time(NULL));
@@ -81,7 +82,7 @@ void closeFileDescriptors() {
 
 
 bool isThrottleFailed() {
-    return randDouble(0, 1) <= FAIL_PROBABILITY;
+    return randDouble(0, 1) < FAIL_PROBABILITY;
 }
 
 void receiveCommandFromEcu(ThrottleControlCommand *pCommand) {

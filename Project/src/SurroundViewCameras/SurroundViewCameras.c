@@ -3,6 +3,7 @@
 #include <string.h>
 #include <fcntl.h>
 #include <stdio.h>
+#include <signal.h>
 #include "SurroundViewCameras.h"
 #include "../Logger/Logger.h"
 #include "../Shared/Consts.h"
@@ -26,6 +27,8 @@ void closeFileDescriptors();
 void convertToStringRepresentation(char *dest, const char *source, unsigned int size);
 
 int main(int argc, char *argv[]) {
+
+    signal(SIGINT, closeFileDescriptors);
     char buffer[8];
 
     setLogFileName(SURROUND_CAMERAS_LOGFILE);
