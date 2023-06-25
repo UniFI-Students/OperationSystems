@@ -10,29 +10,32 @@ HMI_OBJ_FILES = build/HumanMachineInterface.o 	\
 				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o			\
-				build/CentralEcuIpc.o
+				build/CentralEcuIpc.o			\
+				build/FilePathProvider.o
 
 #STEER BY WIRE
 SBW_OBJ_FILES =	build/SteerByWire.o 			\
 				build/Ipc.o						\
 				build/Utils.o					\
 				build/Logger.o 					\
-				build/DateProvider.o
-
+				build/DateProvider.o			\
+				build/FilePathProvider.o
 #THROTTLE CONTROL
 TC_OBJ_FILES = 	build/ThrottleControl.o 		\
 				build/Ipc.o						\
 				build/Utils.o					\
 				build/Logger.o 					\
 				build/Random.o 					\
-				build/DateProvider.o
+				build/DateProvider.o			\
+				build/FilePathProvider.o
 
 #BRAKE BY WIRE
 BBW_OBJ_FILES = build/BrakeByWire.o 			\
 				build/Ipc.o						\
 				build/Utils.o					\
 				build/Logger.o 					\
-				build/DateProvider.o
+				build/DateProvider.o			\
+				build/FilePathProvider.o
 
 #FRONT WIND SHIELD CAMERA
 FWC_OBJ_FILES = build/FrontWindshieldCamera.o	\

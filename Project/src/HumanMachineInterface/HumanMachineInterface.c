@@ -1,18 +1,22 @@
 ﻿#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <signal.h>
+#include <unistd.h>
+#include "HumanMachineInterface.h"
 #include "HumanMachineInterfaceIpc.h"
 #include "../Logger/Logger.h"
 #include "../InterProcessComunication/Ipc.h"
 #include "../CentralEcu/CentralEcuIpc.h"
 #include "../Shared/Consts.h"
-#include "HumanMachineInterface.h"
+#include "../Shared/Utils.h"
 
+int cEcuPid;
 
 int hmiSocketFd;
 int acceptedSocketFd;
 
-void executeHmiReader();
+void executeHmiReader(const char *executionType);
 
 void executeHmiWriter();
 
@@ -21,7 +25,14 @@ void receiveMessageFromEcu(char *message);
 
 void closeFileDescriptors();
 
+void handleInterruptSignal();
+
+void stopCentralEcu();
+
+void runCentralEcu(const char *executionType);
+
 int main(int argc, char *argv[]) {
+    signal(SIGINT, handleInterruptSignal);
     setErrorLogFileName(HUMAN_MACHINE_INTERFACE_ERROR_LOGFILE);
     instantiateErrorLogFileDescriptor();
 
@@ -33,14 +44,19 @@ int main(int argc, char *argv[]) {
     if (strcmp(argv[1], "-w") == 0) {
         executeHmiWriter();
     }
-    if (strcmp(argv[1], "-r") == 0) {
-        executeHmiReader();
-    }
+    executeHmiReader(argv[1]);
 
     return 0;
 }
 
-void executeHmiReader() {
+void handleInterruptSignal() {
+    closeFileDescriptors();
+    stopCentralEcu();
+}
+
+
+void executeHmiReader(const char *executionType) {
+    runCentralEcu(executionType);
     HumanMachineInterfaceCommand cmd;
     char buff[32];
     while (1) {
@@ -55,6 +71,16 @@ void executeHmiReader() {
         if (cmd.type != None)
             sendDataToEcu(HumanMachineInterfaceToCentralEcuRequester, &cmd, sizeof(cmd));
     }
+}
+
+void runCentralEcu(const char *executionType) {
+    cEcuPid = fork();
+    if (cEcuPid == 0) execEcuChildProcessWithArgument(CENTRAL_ECU_EXE_FILENAME, executionType);
+}
+
+void stopCentralEcu() {
+    if (cEcuPid != 0) kill(cEcuPid, SIGINT);
+    exit(0);
 }
 
 

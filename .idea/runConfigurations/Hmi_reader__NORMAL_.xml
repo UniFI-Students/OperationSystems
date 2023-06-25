@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Hmi reader (NORMAL)" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="NORMALE" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ProjectFileDir$/Project/app" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="all" CONFIG_NAME="all" version="1" RUN_PATH="./hmi">
+    <envs>
+      <env name="DEBUG" value=" 1" />
+    </envs>
+    <method v="2" />
+  </configuration>
+</component>

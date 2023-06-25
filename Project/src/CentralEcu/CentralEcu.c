@@ -17,6 +17,7 @@
 #include "../InterProcessComunication/Ipc.h"
 #include "../Shared/Consts.h"
 #include "../FilePathProvider/FilePathProvider.h"
+#include "../Shared/Utils.h"
 
 int cEcuSocketFd;
 int acceptedSocket;
@@ -43,6 +44,8 @@ int remainingSecondsForParkAssist;
 
 bool hasReceivedBadValue;
 
+
+int hmiReaderPid;
 
 void registerSignalHandlers();
 
@@ -83,13 +86,6 @@ void stopParkingSensors();
 
 
 void initiateParking();
-
-
-void execEcuChildProcess(const char *childName);
-
-void execEcuChildProcessWithIntArgument(const char *childName, int arg);
-
-void execEcuChildProcessWithArgument(const char *childName, const char *arg);
 
 
 void closeChildProcesses();
@@ -250,6 +246,7 @@ void closeChildProcesses() {
     stopSensors();
 }
 
+
 void handleHmiRequest(const void *requestDataPtr, unsigned int requestDataLength) {
     if (carState == CarStateParking || carState == CarStatePreparingToPark) return;
     HumanMachineInterfaceCommand *cmdPtr = (HumanMachineInterfaceCommand *) requestDataPtr;
@@ -300,7 +297,10 @@ void stopCar() {
 
 void runParkingSensors() {
     parkAssistPid = fork();
-    if (parkAssistPid == 0) execEcuChildProcessWithArgument(PARK_ASSIST_EXE_FILENAME, executionType);
+    if (parkAssistPid == 0) {
+        closeFileDescriptors();
+        execEcuChildProcessWithArgument(PARK_ASSIST_EXE_FILENAME, executionType);
+    }
 }
 
 void stopParkingSensors() {
@@ -311,10 +311,16 @@ void stopParkingSensors() {
 
 void runSensors() {
     frontWindShieldCameraPid = fork();
-    if (frontWindShieldCameraPid == 0) execEcuChildProcess(FRONT_WIND_SHIELD_CAMERA_EXE_FILENAME);
+    if (frontWindShieldCameraPid == 0) {
+        closeFileDescriptors();
+        execEcuChildProcess(FRONT_WIND_SHIELD_CAMERA_EXE_FILENAME);
+    }
 
     forwardFacingRadarPid = fork();
-    if (forwardFacingRadarPid == 0) execEcuChildProcessWithArgument(FORWARD_FACING_RADAR_EXE_FILENAME, executionType);
+    if (forwardFacingRadarPid == 0) {
+        closeFileDescriptors();
+        execEcuChildProcessWithArgument(FORWARD_FACING_RADAR_EXE_FILENAME, executionType);
+    }
 }
 
 
@@ -328,11 +334,20 @@ void stopSensors() {
 void runActuators() {
     int cEcuPid = getpid();
     steerByWirePid = fork();
-    if (steerByWirePid == 0) execEcuChildProcess(STEER_BY_WIRE_EXE_FILENAME);
+    if (steerByWirePid == 0) {
+        closeFileDescriptors();
+        execEcuChildProcess(STEER_BY_WIRE_EXE_FILENAME);
+    }
     throttleControlPid = fork();
-    if (throttleControlPid == 0) execEcuChildProcessWithIntArgument(THROTTLE_CONTROL_EXE_FILENAME, cEcuPid);
+    if (throttleControlPid == 0) {
+        closeFileDescriptors();
+        execEcuChildProcessWithIntArgument(THROTTLE_CONTROL_EXE_FILENAME, cEcuPid);
+    }
     brakeByWirePid = fork();
-    if (brakeByWirePid == 0) execEcuChildProcess(BRAKE_BY_WIRE_EXE_FILENAME);
+    if (brakeByWirePid == 0) {
+        closeFileDescriptors();
+        execEcuChildProcess(BRAKE_BY_WIRE_EXE_FILENAME);
+    }
 }
 
 
@@ -345,33 +360,9 @@ void stopActuators() {
     brakeByWirePid = 0;
 }
 
-void execEcuChildProcess(const char *childName) {
-    closeFileDescriptors();
-    char buff[128];
-    getCwdWithFileName(childName, buff, sizeof(buff));
-    execl(buff, childName, NULL);
-    logLastError();
-    exit(-1);
-}
-
-void execEcuChildProcessWithArgument(const char *childName, const char *arg) {
-    closeFileDescriptors();
-    char buff[128];
-    getCwdWithFileName(childName, buff, sizeof(buff));
-    execl(buff, childName, arg, (char *) 0);
-    logLastError();
-    exit(-1);
-}
-
-void execEcuChildProcessWithIntArgument(const char *childName, int arg) {
-    closeFileDescriptors();
-    char buff[128];
-    char argStr[16];
-    sprintf(argStr, "%d", arg);
-    getCwdWithFileName(childName, buff, sizeof(buff));
-    execl(buff, childName, argStr, (char *) 0);
-    logLastError();
-    exit(-1);
+void stopHmiReader() {
+    if (hmiReaderPid != 0) kill(hmiReaderPid, SIGINT);
+    hmiReaderPid = 0;
 }
 
 

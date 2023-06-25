@@ -34,8 +34,6 @@ int readBytes(char *buffer, unsigned int nBytes);
 void closeFileDescriptors();
 
 
-void execEcuChildProcessWithArgument(const char *childName, const char *arg);
-
 void runSurroundViewCameras();
 
 void stopSurroundViewCameras();
@@ -147,21 +145,15 @@ void handleInterruptSignal() {
 
 void runSurroundViewCameras() {
     surroundViewCamerasPid = fork();
-    if (surroundViewCamerasPid == 0) execEcuChildProcessWithArgument(SURROUND_VIEW_CAMERAS_EXE_FILENAME, executionType);
+    if (surroundViewCamerasPid == 0) {
+        closeFileDescriptors();
+        execEcuChildProcessWithArgument(SURROUND_VIEW_CAMERAS_EXE_FILENAME, executionType);
+    }
 }
 
 void stopSurroundViewCameras() {
     if (surroundViewCamerasPid != 0) kill(surroundViewCamerasPid, SIGINT);
     surroundViewCamerasPid = 0;
-}
-
-void execEcuChildProcessWithArgument(const char *childName, const char *arg) {
-    closeFileDescriptors();
-    char buff[128];
-    getCwdWithFileName(childName, buff, sizeof(buff));
-    execl(buff, childName, arg, (char *) 0);
-    logLastErrorWithWhenMessage("creating a child process to execute");
-    exit(-1);
 }
 
 void closeFileDescriptors() {
