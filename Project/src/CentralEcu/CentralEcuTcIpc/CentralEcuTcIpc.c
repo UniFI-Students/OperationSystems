@@ -17,7 +17,7 @@ void sendThrottleRequestToTc(int throttleQuantity){
     }
     int tcConnectionRes = connectLocalInetSocket(tcSocket, THROTTLE_CONTROL_INET_SOCKET_PORT);
     while (tcConnectionRes < 0) {
-        logLastErrorWithMessage("Trying to connect to tc");
+        logLastErrorWithWhenMessage("Trying to connect to tc");
         tcConnectionRes = connectLocalInetSocket(tcSocket, THROTTLE_CONTROL_INET_SOCKET_PORT);
         sleep(1);
     }

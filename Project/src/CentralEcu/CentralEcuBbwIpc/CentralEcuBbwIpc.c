@@ -23,7 +23,7 @@ void sendBrakeRequestToBbw(int brakeQuantity) {
     }
     int bbwConnectionRes = connectLocalInetSocket(bbwSocket, BRAKE_BY_WIRE_INET_SOCKET_PORT);
     while (bbwConnectionRes < 0) {
-        logLastErrorWithMessage("Trying to connect to bbw");
+        logLastErrorWithWhenMessage("Trying to connect to bbw");
         bbwConnectionRes = connectLocalInetSocket(bbwSocket, BRAKE_BY_WIRE_INET_SOCKET_PORT);
         sleep(1);
     }

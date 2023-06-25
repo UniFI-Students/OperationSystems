@@ -14,7 +14,7 @@ void sendMessageToHmi(const char *message) {
     }
     int hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
     while (hmiConnectionRes < 0) {
-        logLastErrorWithMessage("Trying to connect to hmi");
+        logLastErrorWithWhenMessage("Trying to connect to hmi");
         hmiConnectionRes = connectLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT);
         sleep(1);
     }

@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     instantiateErrorLogFileDescriptor();
 
     if (argc <= 1) {
-        logLastErrorWithMessage("Unassigned argument for running topology.");
+        logLastErrorWithWhenMessage("Unassigned argument for running topology.");
         exit(-1);
     }
 
@@ -104,7 +104,7 @@ void sendCommandToEcu(HumanMachineInterfaceCommand command) {
         return;
     }
     if (connectLocalInetSocket(ecuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
-        logLastErrorWithMessage("Could not establish connection to CentralEcu");
+        logLastErrorWithWhenMessage("Could not establish connection to CentralEcu");
         closeSocket(ecuSocketFd);
         return;
     }
@@ -138,7 +138,7 @@ void receiveMessageFromEcu(char *message) {
             strcpy(message, requestData);
             break;
         default:
-            logLastErrorWithMessage("Unknown request arrived.");
+            logLastErrorWithWhenMessage("Unknown request arrived.");
             break;
     }
     free(requestData);

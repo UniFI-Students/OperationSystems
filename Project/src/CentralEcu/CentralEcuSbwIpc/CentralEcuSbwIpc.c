@@ -15,7 +15,7 @@ void sendSteerRequestToSbw(SteerByWireCommandType type){
     }
     int sbwConnectionRes = connectLocalInetSocket(swbSocket, STEER_BY_WIRE_INET_SOCKET_PORT);
     while (sbwConnectionRes < 0) {
-        logLastErrorWithMessage("Trying to connect to sbw");
+        logLastErrorWithWhenMessage("Trying to connect to sbw");
         sbwConnectionRes = connectLocalInetSocket(swbSocket, STEER_BY_WIRE_INET_SOCKET_PORT);
         sleep(1);
     }

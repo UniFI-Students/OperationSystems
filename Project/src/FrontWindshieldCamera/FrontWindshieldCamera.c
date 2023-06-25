@@ -64,7 +64,7 @@ void sendDataToEcu(const char* message) {
         return;
     }
     if (connectLocalInetSocket(ecuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
-        logLastErrorWithMessage("Could not establish connection to CentralEcu");
+        logLastErrorWithWhenMessage("Could not establish connection to CentralEcu");
         closeSocket(ecuSocketFd);
         return;
     }

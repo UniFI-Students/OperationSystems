@@ -128,14 +128,14 @@ void reParkCar();
 
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
-        logLastErrorWithMessage("Unassigned execution type argument.");
+        logLastErrorWithWhenMessage("Unassigned execution type argument.");
         exit(-1);
     }
 
     if (strcmp(argv[1], NORMAL_EXECUTION_EXTERNAL_ARGUMENT_NAME) == 0) strcpy(executionType, NORMAL_EXECUTION);
     if (strcmp(argv[1], ARTIFICIAL_EXECUTION_EXTERNAL_ARGUMENT_NAME) == 0) strcpy(executionType, ARTIFICIAL_EXECUTION);
     if (strlen(executionType) == 0) {
-        logLastErrorWithMessage("Incorrect execution type argument.");
+        logLastErrorWithWhenMessage("Incorrect execution type argument.");
         exit(-1);
     }
 
@@ -191,7 +191,7 @@ int main(int argc, char *argv[]) {
                 handlePaRequest(requestDataPtr, requestDataLength);
                 break;
             default:
-                logLastErrorWithMessage("Unknown request arrived.");
+                logLastErrorWithWhenMessage("Unknown request arrived.");
                 break;
         }
         free(requestDataPtr);
@@ -282,7 +282,7 @@ void handleHmiRequest(const void *requestDataPtr, unsigned int requestDataLength
             handleStopCommandFromHmi();
             break;
         case None:
-            logLastErrorWithMessage("Invalid hmi command type");
+            logLastErrorWithWhenMessage("Invalid hmi command type");
             break;
     }
 
@@ -432,7 +432,7 @@ void handleFwcRequest(void *requestDataPtr, unsigned int requestDataLength) {
         return;
     }
     errno = 0;
-    logLastErrorWithMessage("Incorrect request from fwc.");
+    logLastErrorWithWhenMessage("Incorrect request from fwc.");
 }
 
 void steer(SteerByWireCommandType type) {
@@ -519,7 +519,7 @@ void activateParkAssist() {
     }
     int paConnectionRes = connectLocalInetSocket(paSocket, PARK_ASSIST_INET_SOCKET_PORT);
     while (paConnectionRes < 0) {
-        logLastErrorWithMessage("Trying to connect to pa.");
+        logLastErrorWithWhenMessage("Trying to connect to pa.");
         paConnectionRes = connectLocalInetSocket(paSocket, PARK_ASSIST_INET_SOCKET_PORT);
         sleep(1);
     }

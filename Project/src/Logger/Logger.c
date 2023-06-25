@@ -41,7 +41,7 @@ void setErrorLogFileName(const char *errorLogFileName)
         exit(-1);
     }
     strcat(errorLogFilePath, "/");
-    strcat(errorLogFilePath, LOG_DIRECTORY);
+    strcat(errorLogFilePath, ERROR_LOG_DIRECTORY);
 
     createDirectoryIfDoesNotExist(errorLogFilePath);
 
@@ -68,14 +68,19 @@ void logMessage(const char *message){
 }
 
 void logLastError(){
-    perror(strerror(errno));
+    perror("");
     fprintf(errorLogFdPtr, "%s: Error (%d) - %s\n", getCurrentDateTime(), errno, strerror(errno));
     fflush(errorLogFdPtr);
     errno = 0;
 }
 
-void logLastErrorWithMessage(const char *message){
-    perror(message);
+void logLastErrorWithWhenMessage(const char *whenMessage){
+    perror(whenMessage);
+    fprintf(errorLogFdPtr, "%s: Error (%d) - %s when %s\n", getCurrentDateTime(), errno, strerror(errno), whenMessage);
+    fflush(errorLogFdPtr);
+}
+
+void logErrorMessage(const char *message){
     fprintf(errorLogFdPtr, "%s: Error happened - %s\n", getCurrentDateTime(), message);
     fflush(errorLogFdPtr);
 }

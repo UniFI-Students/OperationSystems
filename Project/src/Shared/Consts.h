@@ -2,6 +2,7 @@
 #define OS_CONSTS_H
 
 #define LOG_DIRECTORY "logs"
+#define ERROR_LOG_DIRECTORY "eLogs"
 
 #define SIG_STOP_CAR SIGUSR1
 #define SIG_THROTTLE_FAIL SIGUSR2

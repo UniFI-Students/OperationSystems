@@ -10,7 +10,8 @@ void closeLogFileDescriptor();
 void closeErrorLogFileDescriptor();
 
 void logMessage(const char *message);
+void logErrorMessage(const char *message);
 void logLastError();
-void logLastErrorWithMessage(const char *message);
+void logLastErrorWithWhenMessage(const char *whenMessage);
 
 #endif

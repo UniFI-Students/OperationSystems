@@ -137,7 +137,7 @@ bool receiveCommandFromEcu(SteerByWireCommand *pCommand) {
             pCommand->type = cmdPtr->type;
             break;
         default:
-            logLastErrorWithMessage("Unknown request arrived.");
+            logLastErrorWithWhenMessage("Unknown request arrived.");
             break;
     }
 

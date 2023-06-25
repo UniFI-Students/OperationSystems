@@ -57,7 +57,7 @@ int main(int argc, char *argv[]) {
     instantiateErrorLogFileDescriptor();
 
     if (argc <= 1) {
-        logLastErrorWithMessage("Unassigned execution type argument.");
+        logLastErrorWithWhenMessage("Unassigned execution type argument.");
         closeFileDescriptors();
         return -1;
     }
@@ -68,7 +68,7 @@ int main(int argc, char *argv[]) {
         getCwdWithFileName(ARTIFICIAL_EXECUTION_RANDOM_DATASOURCE, dataSourceFilePath, sizeof(dataSourceFilePath));
 
     if (strlen(dataSourceFilePath) == 0) {
-        logLastErrorWithMessage("Incorrect execution type argument.");
+        logLastErrorWithWhenMessage("Incorrect execution type argument.");
         closeFileDescriptors();
         return -1;
     }
@@ -78,7 +78,7 @@ int main(int argc, char *argv[]) {
     dataSourceFileFd = open(dataSourceFilePath, O_RDONLY);
     if (dataSourceFileFd < 0) {
         logMessage(dataSourceFilePath);
-        logLastErrorWithMessage("Data source file not found.");
+        logLastErrorWithWhenMessage("Data source file not found.");
         closeFileDescriptors();
         return -1;
     }
@@ -163,7 +163,7 @@ void sendBytesToEcu(const char *bytes, unsigned int nBytes) {
         return;
     }
     if (connectLocalInetSocket(ecuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
-        logLastErrorWithMessage("Could not establish connection to CentralEcu");
+        logLastErrorWithWhenMessage("Could not establish connection to CentralEcu");
         closeSocket(ecuSocketFd);
         return;
     }
@@ -212,7 +212,7 @@ int receive8BytesFromSurroundViewCameras(char buffer[8]) {
     }
 
     if (requesterId != SurroundViewCamerasToParkAssistRequester) {
-        logLastErrorWithMessage("Incorrect requester.");
+        logLastErrorWithWhenMessage("Incorrect requester.");
         free(requestData);
         closeSocket(acceptedSocketFd);
         return -1;
@@ -245,7 +245,7 @@ int receiveParkCommandFromEcu() {
     closeSocket(acceptedSocketFd);
 
     if (requesterId != CentralEcuToParkAssistRequester) {
-        logLastErrorWithMessage("Incorrect requester.");
+        logLastErrorWithWhenMessage("Incorrect requester.");
         return -1;
     }
     return 0;

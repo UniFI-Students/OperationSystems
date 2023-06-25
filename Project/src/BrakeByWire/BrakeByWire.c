@@ -6,7 +6,6 @@
 #include "../Logger/Logger.h"
 #include "../DateProvider/DateProvider.h"
 #include "../InterProcessComunication/Ipc.h"
-#include "../CentralEcu/CentralEcuBbwIpc/CentralEcuBbwIpc.h"
 #include "../Shared/Consts.h"
 
 #define BRAKE "FRENO"
@@ -20,16 +19,16 @@ int acceptedSocketFd;
 void handleBrakeCommand(BrakeByWireCommand command);
 
 void receiveCommandFromEcu(BrakeByWireCommand *pCommand);
-void receiveStopSignalFromEcu();
-
-void handleStopSignal();
 
 void registerSignalHandlers();
-void closeFileDescriptors();
 
+void handleStopSignal();
 void handleInterruptSignal();
 
-int main(){
+void closeFileDescriptors();
+
+
+int main() {
     BrakeByWireCommand cmd;
     setLogFileName(BREAK_BY_WIRE_LOGFILE);
     setErrorLogFileName(BREAK_BY_WIRE_ERROR_LOGFILE);
@@ -38,25 +37,24 @@ int main(){
 
     bbwSocketFd = createInetSocket(DEFAULT_PROTOCOL);
     if (bbwSocketFd < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("creating an INET socket for the bbw");
         closeFileDescriptors();
         exit(-1);
     }
 
     if (bindLocalInetSocket(bbwSocketFd, BRAKE_BY_WIRE_INET_SOCKET_PORT) < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("binding an INET socket for the bbw");
         closeFileDescriptors();
         exit(-1);
     }
     if (listenSocket(bbwSocketFd, 5) < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("listening an INET socket for the bbw");
         closeFileDescriptors();
         exit(-1);
     }
 
     registerSignalHandlers();
-    while(1)
-    {
+    while (1) {
         receiveCommandFromEcu(&cmd);
         handleBrakeCommand(cmd);
     }
@@ -72,7 +70,7 @@ void handleInterruptSignal() {
     exit(0);
 }
 
-void closeFileDescriptors(){
+void closeFileDescriptors() {
     closeLogFileDescriptor();
     closeErrorLogFileDescriptor();
     closeSocket(bbwSocketFd);
@@ -81,8 +79,8 @@ void closeFileDescriptors(){
 
 void receiveCommandFromEcu(BrakeByWireCommand *pCommand) {
     acceptedSocketFd = acceptInetSocket(bbwSocketFd);
-    if (acceptedSocketFd < 0){
-        logLastError();
+    if (acceptedSocketFd < 0) {
+        logLastErrorWithWhenMessage("accepting a request to the bbw");
         return;
     }
 
@@ -90,22 +88,22 @@ void receiveCommandFromEcu(BrakeByWireCommand *pCommand) {
     void *requestData;
     unsigned int requestDataLength;
 
-    if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0){
-        logLastError();
+    if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0) {
+        logLastErrorWithWhenMessage("reading the request sent to the bbw");
         closeSocket(acceptedSocketFd);
         return;
     }
 
-    BrakeByWireCommand *cmdPtr = (BrakeByWireCommand*) requestData;
+    BrakeByWireCommand *cmdPtr = (BrakeByWireCommand *) requestData;
 
-    switch ((BreakByWireRequester)requesterId) {
+    switch ((BreakByWireRequester) requesterId) {
 
         case CentralEcuToBbwRequester:
             pCommand->type = cmdPtr->type;
-            pCommand->quantity=cmdPtr->quantity;
+            pCommand->quantity = cmdPtr->quantity;
             break;
         default:
-            logLastErrorWithMessage("Unknown request arrived.");
+            logErrorMessage("Unknown request arrived to the bbw");
             break;
     }
 
@@ -124,6 +122,7 @@ void handleBrakeCommand(BrakeByWireCommand command) {
             commandType = BRAKE;
             break;
         default:
+            logErrorMessage("Unhandled break by wire command because of undeclared type");
             return;
     }
 

@@ -36,7 +36,7 @@ void handleInterruptSignal();
 
 int main(int argc, char *argv[]) {
     if (argc <= 1) {
-        logLastErrorWithMessage("Unassigned argument for central ecu pid.");
+        logLastErrorWithWhenMessage("Unassigned argument for central ecu pid.");
         exit(-1);
     }
     signal(SIGINT, handleInterruptSignal);
@@ -119,7 +119,7 @@ void receiveCommandFromEcu(ThrottleControlCommand *pCommand) {
             pCommand->quantity = cmdPtr->quantity;
             break;
         default:
-            logLastErrorWithMessage("Unknown request arrived.");
+            logLastErrorWithWhenMessage("Unknown request arrived.");
             break;
     }
 
