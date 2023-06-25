@@ -1,4 +1,7 @@
 #ifndef FRONT_WHINDSHIELD_CAMERA_H
 #define FRONT_WHINDSHIELD_CAMERA_H
 
+#define FRONT_CAMERA_LOGFILE "camera.log"
+#define FRONT_CAMERA_ERROR_LOGFILE "camera.eLog"
+
 #endif

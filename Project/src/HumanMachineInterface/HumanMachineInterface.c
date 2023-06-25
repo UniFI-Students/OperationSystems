@@ -6,12 +6,7 @@
 #include "../InterProcessComunication/Ipc.h"
 #include "../CentralEcu/CentralEcuIpc.h"
 #include "../Shared/Consts.h"
-
-#define START "INIZIO"
-#define PARKING "PARCHEGGIO"
-#define STOP "ARRESTO"
-
-#define HUMAN_MACHINE_INTERFACE_ERROR_LOGFILE "hmi.eLog"
+#include "HumanMachineInterface.h"
 
 
 int hmiSocketFd;
@@ -20,8 +15,6 @@ int acceptedSocketFd;
 void executeHmiReader();
 
 void executeHmiWriter();
-
-void sendCommandToEcu(HumanMachineInterfaceCommand command);
 
 void receiveMessageFromEcu(char *message);
 
@@ -33,7 +26,7 @@ int main(int argc, char *argv[]) {
     instantiateErrorLogFileDescriptor();
 
     if (argc <= 1) {
-        logLastErrorWithWhenMessage("Unassigned argument for running topology.");
+        logErrorMessage("Unassigned argument for running topology.");
         exit(-1);
     }
 
@@ -59,7 +52,8 @@ void executeHmiReader() {
         if (strcmp(PARKING, buff) == 0) cmd.type = Parking;
         if (strcmp(STOP, buff) == 0) cmd.type = Stop;
 
-        if (cmd.type != None) sendCommandToEcu(cmd);
+        if (cmd.type != None)
+            sendDataToEcu(HumanMachineInterfaceToCentralEcuRequester, &cmd, sizeof(cmd));
     }
 }
 
@@ -67,18 +61,18 @@ void executeHmiReader() {
 void executeHmiWriter() {
     hmiSocketFd = createInetSocket(DEFAULT_PROTOCOL);
     if (hmiSocketFd < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("creating a socket for the hmi");
         closeFileDescriptors();
         exit(-1);
     }
 
     if (bindLocalInetSocket(hmiSocketFd, HUMAN_MACHINE_INTERFACE_INET_SOCKET_PORT) < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("binding a socket for the hmi");
         closeFileDescriptors();
         exit(-1);
     }
     if (listenSocket(hmiSocketFd, 5) < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("listening a socket for the hmi");
         closeFileDescriptors();
         exit(-1);
     }
@@ -97,30 +91,11 @@ void closeFileDescriptors() {
 }
 
 
-void sendCommandToEcu(HumanMachineInterfaceCommand command) {
-    int ecuSocketFd = createInetSocket(DEFAULT_PROTOCOL);
-    if (ecuSocketFd < 0) {
-        logLastError();
-        return;
-    }
-    if (connectLocalInetSocket(ecuSocketFd, CENTRAL_ECU_INET_SOCKET_PORT) < 0) {
-        logLastErrorWithWhenMessage("Could not establish connection to CentralEcu");
-        closeSocket(ecuSocketFd);
-        return;
-    }
-    if (writeRequest(ecuSocketFd, HumanMachineInterfaceToCentralEcuRequester, &command, sizeof(command)) < 0) {
-        logLastError();
-        closeSocket(ecuSocketFd);
-        return;
-    }
-    if (closeSocket(ecuSocketFd) < 0) logLastError();
-}
-
 void receiveMessageFromEcu(char *message) {
     acceptedSocketFd = acceptInetSocket(hmiSocketFd);
 
-    if (acceptedSocketFd < 0){
-        logLastError();
+    if (acceptedSocketFd < 0) {
+        logLastErrorWithWhenMessage("accepting a request to the hmi");
         return;
     }
 
@@ -129,7 +104,7 @@ void receiveMessageFromEcu(char *message) {
     unsigned int requestDataLength;
 
     if (readRequest(acceptedSocketFd, &requesterId, &requestData, &requestDataLength) < 0) {
-        logLastError();
+        logLastErrorWithWhenMessage("reading the request sent to the hmi");
         closeSocket(acceptedSocketFd);
         return;
     }
@@ -138,7 +113,7 @@ void receiveMessageFromEcu(char *message) {
             strcpy(message, requestData);
             break;
         default:
-            logLastErrorWithWhenMessage("Unknown request arrived.");
+            logErrorMessage("Unknown request arrived.");
             break;
     }
     free(requestData);

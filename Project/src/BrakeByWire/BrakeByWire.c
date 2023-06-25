@@ -7,11 +7,8 @@
 #include "../DateProvider/DateProvider.h"
 #include "../InterProcessComunication/Ipc.h"
 #include "../Shared/Consts.h"
+#include "BrakeByWire.h"
 
-#define BRAKE "FRENO"
-#define STOP_CAR "ARRESTO AUTO"
-#define BREAK_BY_WIRE_LOGFILE "brake.log"
-#define BREAK_BY_WIRE_ERROR_LOGFILE "brake.eLog"
 
 int bbwSocketFd;
 int acceptedSocketFd;

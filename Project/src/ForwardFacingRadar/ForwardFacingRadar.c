@@ -8,9 +8,7 @@
 #include "../FilePathProvider/FilePathProvider.h"
 #include "../CentralEcu/CentralEcuIpc.h"
 #include "../Shared/Utils.h"
-
-#define FORWARD_RADAR_LOGFILE "radar.log"
-#define FORWARD_RADAR_ERROR_LOGFILE "radar.eLog"
+#include "ForwardFacingRadar.h"
 
 
 char dataSourceFilePath[128];
@@ -45,7 +43,6 @@ int main(int argc, char *argv[]) {
 
     signal(SIGINT, handleInterruptSignal);
 
-    char buffer[8];
 
     setLogFileName(FORWARD_RADAR_LOGFILE);
     setErrorLogFileName(FORWARD_RADAR_ERROR_LOGFILE);
@@ -59,6 +56,7 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
+    char buffer[8];
     while (1) {
         if (readBytes(buffer, 8) == 8) {
             sendDataToEcu(ForwardFacingRadarToCentralEcuRequester, buffer, 8);

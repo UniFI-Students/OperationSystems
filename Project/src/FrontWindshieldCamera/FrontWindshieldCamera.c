@@ -3,16 +3,12 @@
 #include <stdio.h>
 #include <signal.h>
 #include <stdlib.h>
-#include "FrontWindshieldCamera.h"
 #include "../Logger/Logger.h"
-#include "../InterProcessComunication/Ipc.h"
-#include "../Shared/Consts.h"
 #include "../CentralEcu/CentralEcuIpc.h"
 #include "../FilePathProvider/FilePathProvider.h"
+#include "../Shared/Consts.h"
+#include "FrontWindshieldCamera.h"
 
-#define FRONT_CAMERA_DATA_SOURCE_FILE "frontCamera.data"
-#define FRONT_CAMERA_LOGFILE "camera.log"
-#define FRONT_CAMERA_ERROR_LOGFILE "camera.eLog"
 
 FILE *dataSourceFilePtr;
 char dataSourceFilePath[128];
@@ -25,7 +21,6 @@ void handleInterruptSignal();
 
 int main() {
     signal(SIGINT, handleInterruptSignal);
-    char buff[64];
     getCwdWithFileName(FRONT_CAMERA_DATA_SOURCE_FILE, dataSourceFilePath, sizeof(dataSourceFilePath));
 
     setLogFileName(FRONT_CAMERA_LOGFILE);
@@ -35,6 +30,7 @@ int main() {
     instantiateErrorLogFileDescriptor();
     dataSourceFilePtr = fopen(dataSourceFilePath, "r");
 
+    char buff[64];
     while (!feof(dataSourceFilePtr)) {
         readDataFromSourceFile(buff);
         sendDataToEcu(FrontWindShieldCameraToCentralEcuRequester, buff, strlen(buff));
