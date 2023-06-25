@@ -21,11 +21,15 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/Project/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/Shared/Consts.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Shared/Consts.h" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -79,7 +83,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="OCResolveContextSettings">
-    <option name="configuration" value="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" />
+    <option name="configuration" value="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
@@ -211,7 +215,7 @@
       <workItem from="1687619797832" duration="6293000" />
       <workItem from="1687639138025" duration="24358000" />
       <workItem from="1687664689339" duration="2727000" />
-      <workItem from="1687684649658" duration="3251000" />
+      <workItem from="1687684649658" duration="3864000" />
     </task>
     <servers />
   </component>
@@ -221,16 +225,6 @@
   <component name="XDebuggerManager">
     <breakpoint-manager>
       <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c</url>
-          <line>57</line>
-          <option name="timeStamp" value="11" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c</url>
-          <line>137</line>
-          <option name="timeStamp" value="101" />
-        </line-breakpoint>
         <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
           <url>file://$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c</url>
           <line>508</line>
