@@ -19,14 +19,6 @@
   <component name="ChangeListManager">
     <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWire.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -123,7 +115,7 @@
       <recent name="F:\OperationSystems\Project\app" />
     </key>
   </component>
-  <component name="RunManager" selected="Makefile Target.all">
+  <component name="RunManager" selected="Makefile Application.Hmi writer">
     <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
       <method v="2">
         <option name="CLION.EXTERNAL.BUILD" enabled="true" />
@@ -209,7 +201,7 @@
       <workItem from="1687547292445" duration="4414000" />
       <workItem from="1687595525360" duration="1349000" />
       <workItem from="1687619797832" duration="6293000" />
-      <workItem from="1687639138025" duration="23996000" />
+      <workItem from="1687639138025" duration="24353000" />
     </task>
     <servers />
   </component>
