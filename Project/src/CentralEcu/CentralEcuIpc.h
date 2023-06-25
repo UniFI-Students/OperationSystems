@@ -2,9 +2,6 @@
 #define OS_CENTRAL_ECU_H
 
 
-
-
-
 enum CentralEcuRequester {
     HumanMachineInterfaceToCentralEcuRequester,
     FrontWindShieldCameraToCentralEcuRequester,
@@ -24,4 +21,5 @@ struct HumanMachineInterfaceCommand {
     HmiCommandType type;
 } typedef HumanMachineInterfaceCommand;
 
+int sendDataToEcu(CentralEcuRequester requester, const void *data, unsigned int dataLength);
 #endif

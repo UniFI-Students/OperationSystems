@@ -21,14 +21,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/Project/src/Shared/Utils.c" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/Project/src/Shared/Utils.h" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuIpc.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/Logger/Logger.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Logger/Logger.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -214,7 +211,7 @@
       <workItem from="1687619797832" duration="6293000" />
       <workItem from="1687639138025" duration="24358000" />
       <workItem from="1687664689339" duration="2727000" />
-      <workItem from="1687684649658" duration="1611000" />
+      <workItem from="1687684649658" duration="2632000" />
     </task>
     <servers />
   </component>

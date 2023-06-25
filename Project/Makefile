@@ -39,14 +39,15 @@ FWC_OBJ_FILES = build/FrontWindshieldCamera.o	\
 				build/Utils.o					\
  				build/Logger.o 					\
  				build/DateProvider.o			\
+				build/CentralEcuIpc.o			\
 				build/FilePathProvider.o
 
 #FORWARD FACING RADAR
 FFR_OBJ_FILES = build/ForwardFacingRadar.o 		\
-				build/Ipc.o						\
 				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o			\
+				build/CentralEcuIpc.o			\
 				build/FilePathProvider.o
 
 #PARK ASSIST
@@ -55,6 +56,7 @@ PA_OBJ_FILES = build/ParkAssist.o 				\
 				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o			\
+				build/CentralEcuIpc.o			\
 				build/FilePathProvider.o
 
 #SURROUND VIEW CAMERAS
