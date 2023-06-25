@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <fcntl.h>
-#include <stdio.h>
 #include <signal.h>
 #include "SurroundViewCameras.h"
 #include "../Logger/Logger.h"
@@ -13,8 +12,6 @@
 #include "../Shared/Utils.h"
 
 
-#define SURROUND_CAMERAS_LOGFILE "cameras.log"
-#define SURROUND_CAMERAS_ERROR_LOGFILE "cameras.ELog"
 
 char dataSourceFilePath[128];
 int dataSourceFileFd;

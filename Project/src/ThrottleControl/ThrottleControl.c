@@ -9,11 +9,8 @@
 #include "../DateProvider/DateProvider.h"
 #include "../Shared/Consts.h"
 #include "../InterProcessComunication/Ipc.h"
+#include "ThrottleControl.h"
 
-#define INCREMENT "INCREMENTO"
-
-#define THROTTLE_CONTROL_LOGFILE "throttle.log"
-#define THROTTLE_CONTROL_ERROR_LOGFILE "throttle.eLog"
 
 int cEcuPid;
 

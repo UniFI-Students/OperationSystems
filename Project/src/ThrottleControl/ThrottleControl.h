@@ -1,0 +1,10 @@
+#ifndef OS_THROTTLE_CONTROL_H
+#define OS_THROTTLE_CONTROL_H
+
+
+#define INCREMENT "INCREMENTO"
+
+#define THROTTLE_CONTROL_LOGFILE "throttle.log"
+#define THROTTLE_CONTROL_ERROR_LOGFILE "throttle.eLog"
+
+#endif

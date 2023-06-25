@@ -1,5 +1,5 @@
-#ifndef OS_THROTTLE_CONTROL_H
-#define OS_THROTTLE_CONTROL_H
+#ifndef OS_THROTTLE_CONTROL_IPC_H
+#define OS_THROTTLE_CONTROL_IPC_H
 
 
 enum ThrottleControlRequester {

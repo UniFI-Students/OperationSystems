@@ -1,3 +1,7 @@
 #ifndef SURROUND_VIEW_CAMERAS_H
 #define SURROUND_VIEW_CAMERAS_H
+
+#define SURROUND_CAMERAS_LOGFILE "cameras.log"
+#define SURROUND_CAMERAS_ERROR_LOGFILE "cameras.ELog"
+
 #endif
