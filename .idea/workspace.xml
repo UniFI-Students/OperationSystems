@@ -21,22 +21,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2774ffe8-c971-4e63-ab35-698d1981b766" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/Shared/Utils.c" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/Project/src/Shared/Utils.h" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Project/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/Project/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/BrakeByWire/BrakeByWire.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuBbwIpc/CentralEcuBbwIpc.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuBbwIpc/CentralEcuBbwIpc.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuHmiIpc/CentralEcuHmiIpc.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuHmiIpc/CentralEcuHmiIpc.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuSbwIpc/CentralEcuSbwIpc.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuSbwIpc/CentralEcuSbwIpc.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuTcIpc/CentralEcuTcIpc.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcuTcIpc/CentralEcuTcIpc.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/FrontWindshieldCamera/FrontWindshieldCamera.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/HumanMachineInterface/HumanMachineInterface.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/Logger/Logger.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Logger/Logger.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/Logger/Logger.h" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/Logger/Logger.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ParkAssist/ParkAssist.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWire.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SteerByWire/SteerByWire.c" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/SurroundViewCameras/SurroundViewCameras.c" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" beforeDir="false" afterPath="$PROJECT_DIR$/Project/src/ThrottleControl/ThrottleControl.c" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,7 +82,7 @@
     <option name="stateVersion" value="1" />
   </component>
   <component name="OCResolveContextSettings">
-    <option name="configuration" value="$PROJECT_DIR$/Project/src/CentralEcu/CentralEcu.c" />
+    <option name="configuration" value="$PROJECT_DIR$/Project/src/ForwardFacingRadar/ForwardFacingRadar.c" />
   </component>
   <component name="ProjectApplicationVersion">
     <option name="ide" value="CLion" />
@@ -135,6 +127,11 @@
     </key>
   </component>
   <component name="RunManager" selected="Makefile Target.clean">
+    <configuration default="true" type="CLionExternalRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="CLION.EXTERNAL.BUILD" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="CentralEcu (ARTIFICIAL)" type="CLionNativeAppRunConfigurationType" PROGRAM_PARAMS="ARTIFICIALE" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" WORKING_DIR="file://$ProjectFileDir$/Project/app" PASS_PARENT_ENVS_2="true" PROJECT_NAME="OperationSystems" TARGET_NAME="cleanLogs" CONFIG_NAME="cleanLogs" version="1" RUN_PATH="./ecu">
       <envs>
         <env name="DEBUG" value=" 1" />
@@ -217,7 +214,7 @@
       <workItem from="1687619797832" duration="6293000" />
       <workItem from="1687639138025" duration="24358000" />
       <workItem from="1687664689339" duration="2727000" />
-      <workItem from="1687684649658" duration="885000" />
+      <workItem from="1687684649658" duration="1611000" />
     </task>
     <servers />
   </component>

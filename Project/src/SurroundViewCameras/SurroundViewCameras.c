@@ -24,7 +24,7 @@ void sendBytesToParkAssist(const char *bytes, unsigned int nBytes);
 
 void closeFileDescriptors();
 
-void convertToStringRepresentation(char *dest, const char *source, unsigned int size);
+void convertBytesToStringRepresentation(char *dest, const char *source, unsigned int size);
 
 void handleInterruptSignal();
 
@@ -75,7 +75,7 @@ int main(int argc, char *argv[]) {
             char logString[128];
             memset(logString, 0, sizeof(logString));
             sendBytesToParkAssist(buffer, 8);
-            convertToStringRepresentation(logString, buffer, 8);
+            convertBytesToStringRepresentation(logString, buffer, 8);
             logMessage(logString);
         }
         sleep(1);
@@ -87,7 +87,7 @@ void handleInterruptSignal() {
     exit(0);
 }
 
-void convertToStringRepresentation(char *dest, const char *source, unsigned int size) {
+void convertBytesToStringRepresentation(char *dest, const char *source, unsigned int size) {
     char convertedValueToHexString[16];
     for (int i = 0; i < 8; ++i) {
         sprintf(convertedValueToHexString, "| 0x%.8X ", source[0]);

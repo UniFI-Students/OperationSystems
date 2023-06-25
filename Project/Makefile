@@ -7,18 +7,21 @@ C_FILES = $(shell find src -name '*.c')
 #HUMAN MACHINE INTERFACE
 HMI_OBJ_FILES = build/HumanMachineInterface.o 	\
 				build/Ipc.o						\
+				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o
 
 #STEER BY WIRE
 SBW_OBJ_FILES =	build/SteerByWire.o 			\
 				build/Ipc.o						\
+				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o
 
 #THROTTLE CONTROL
 TC_OBJ_FILES = 	build/ThrottleControl.o 		\
 				build/Ipc.o						\
+				build/Utils.o					\
 				build/Logger.o 					\
 				build/Random.o 					\
 				build/DateProvider.o
@@ -26,12 +29,14 @@ TC_OBJ_FILES = 	build/ThrottleControl.o 		\
 #BRAKE BY WIRE
 BBW_OBJ_FILES = build/BrakeByWire.o 			\
 				build/Ipc.o						\
+				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o
 
 #FRONT WIND SHIELD CAMERA
 FWC_OBJ_FILES = build/FrontWindshieldCamera.o	\
 				build/Ipc.o						\
+				build/Utils.o					\
  				build/Logger.o 					\
  				build/DateProvider.o			\
 				build/FilePathProvider.o
@@ -39,6 +44,7 @@ FWC_OBJ_FILES = build/FrontWindshieldCamera.o	\
 #FORWARD FACING RADAR
 FFR_OBJ_FILES = build/ForwardFacingRadar.o 		\
 				build/Ipc.o						\
+				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o			\
 				build/FilePathProvider.o
@@ -46,6 +52,7 @@ FFR_OBJ_FILES = build/ForwardFacingRadar.o 		\
 #PARK ASSIST
 PA_OBJ_FILES = build/ParkAssist.o 				\
 				build/Ipc.o						\
+				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o			\
 				build/FilePathProvider.o
@@ -53,6 +60,7 @@ PA_OBJ_FILES = build/ParkAssist.o 				\
 #SURROUND VIEW CAMERAS
 SVC_OBJ_FILES = build/SurroundViewCameras.o 	\
 				build/Ipc.o						\
+				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o			\
 				build/FilePathProvider.o
@@ -60,6 +68,7 @@ SVC_OBJ_FILES = build/SurroundViewCameras.o 	\
 #CENTRAL ECU
 ECU_OBJ_FILES = build/CentralEcu.o 				\
 				build/Ipc.o 					\
+				build/Utils.o					\
 				build/Logger.o 					\
 				build/DateProvider.o			\
 				build/FilePathProvider.o		\

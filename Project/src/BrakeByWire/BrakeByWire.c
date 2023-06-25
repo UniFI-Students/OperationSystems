@@ -25,16 +25,28 @@ void registerSignalHandlers();
 void handleStopSignal();
 void handleInterruptSignal();
 
+
+void instantiateBbwSocket();
 void closeFileDescriptors();
 
-
 int main() {
-    BrakeByWireCommand cmd;
     setLogFileName(BREAK_BY_WIRE_LOGFILE);
     setErrorLogFileName(BREAK_BY_WIRE_ERROR_LOGFILE);
     instantiateLogFileDescriptor();
     instantiateErrorLogFileDescriptor();
 
+    instantiateBbwSocket();
+
+    registerSignalHandlers();
+
+    BrakeByWireCommand cmd;
+    while (1) {
+        receiveCommandFromEcu(&cmd);
+        handleBrakeCommand(cmd);
+    }
+}
+
+void instantiateBbwSocket() {
     bbwSocketFd = createInetSocket(DEFAULT_PROTOCOL);
     if (bbwSocketFd < 0) {
         logLastErrorWithWhenMessage("creating an INET socket for the bbw");
@@ -51,12 +63,6 @@ int main() {
         logLastErrorWithWhenMessage("listening an INET socket for the bbw");
         closeFileDescriptors();
         exit(-1);
-    }
-
-    registerSignalHandlers();
-    while (1) {
-        receiveCommandFromEcu(&cmd);
-        handleBrakeCommand(cmd);
     }
 }
 

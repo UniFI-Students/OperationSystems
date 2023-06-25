@@ -4,9 +4,9 @@
 #include <errno.h>
 #include <unistd.h>
 #include <stdlib.h>
-#include <sys/stat.h>
 #include "../DateProvider/DateProvider.h"
 #include "../Shared/Consts.h"
+#include "../Shared/Utils.h"
 
 
 char logFilePath[128];
@@ -14,7 +14,7 @@ char errorLogFilePath[128];
 FILE* logFdPtr;
 FILE* errorLogFdPtr;
 
-void createDirectoryIfDoesNotExist(const char *path);
+
 
 
 void setLogFileName(const char *logFileName){
@@ -85,10 +85,3 @@ void logErrorMessage(const char *message){
     fflush(errorLogFdPtr);
 }
 
-void createDirectoryIfDoesNotExist(const char* path) {
-    struct stat dirStat;
-    if (stat(path, &dirStat) < 0) {
-        if (mkdir(path, S_IRWXO | S_IRWXG | S_IRWXU) != 0) perror(strerror(errno));
-    }
-
-}
