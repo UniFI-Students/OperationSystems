@@ -112,6 +112,7 @@ buildApp: $(HMI_OBJ_FILES)
 
 	$(AT) cp src/frontCamera.data app/frontCamera.data
 	$(AT) cp src/urandomARTIFICIALE.binary app/urandomARTIFICIALE.binary
+	$(AT) cp src/run.sh app/run
 
 buildFileObjects: $(C_FILES)
 	$(AT) mkdir -p build
