@@ -2,6 +2,10 @@
 CFLAGS =
 C_FILES = $(shell find src -name '*.c')
 
+NEED_FILES_IN_APP_FROM_SRC = 	src/frontCamera.data			\
+								src/urandomARTIFICIALE.binary	\
+								src/run.sh
+
 #			OBJ FILE DEPENDENCIES				#
 
 #HUMAN MACHINE INTERFACE
@@ -97,9 +101,7 @@ endif
 
 all: buildFileObjects buildApp
 
-buildApp: $(HMI_OBJ_FILES)
-	$(AT) mkdir -p app
-
+buildApp: initializeAppDirectory $(HMI_OBJ_FILES) $(SBW_OBJ_FILES) $(TC_OBJ_FILES) $(BBW_OBJ_FILES) $(FWC_OBJ_FILES) $(FFR_OBJ_FILES) $(PA_OBJ_FILES) $(SVC_OBJ_FILES) $(ECU_OBJ_FILES)
 	$(CC) $(HMI_OBJ_FILES)  -o app/hmi $(CFLAGS)
 	$(CC) $(SBW_OBJ_FILES)  -o app/sbw $(CFLAGS)
 	$(CC) $(TC_OBJ_FILES)  -o app/tc $(CFLAGS)
@@ -110,9 +112,9 @@ buildApp: $(HMI_OBJ_FILES)
 	$(CC) $(SVC_OBJ_FILES)  -o app/svc $(CFLAGS)
 	$(CC) $(ECU_OBJ_FILES)  -o app/ecu $(CFLAGS)
 
-	$(AT) cp src/frontCamera.data app/frontCamera.data
-	$(AT) cp src/urandomARTIFICIALE.binary app/urandomARTIFICIALE.binary
-	$(AT) cp src/run.sh app/run
+initializeAppDirectory: $(NEED_FILES_IN_APP_FROM_SRC)
+	$(AT) mkdir -p app
+	$(foreach file, $^, cp $(file) $(addprefix app/,$(notdir $(file)));)
 
 buildFileObjects: $(C_FILES)
 	$(AT) mkdir -p build
