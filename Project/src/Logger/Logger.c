@@ -68,7 +68,7 @@ void logMessage(const char *message){
 }
 
 void logLastError(){
-    perror("");
+    perror();
     fprintf(errorLogFdPtr, "%s: Error (%d) - %s\n", getCurrentDateTime(), errno, strerror(errno));
     fflush(errorLogFdPtr);
     errno = 0;
